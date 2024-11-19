@@ -1,186 +1,130 @@
-using System.Collections;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace SerapKeremGameTools._Game._TimeSystem
 {
+    /// <summary>
+    /// Manages game time and countdown functionality, providing events for key time states.
+    /// </summary>
     public class TimeManager : MonoBehaviour
     {
-        [Header("TimeManager Parameters")]
-        [SerializeField, Tooltip("Initial time for the level in seconds.")]
-        private float _initialTime = 300f; // Ba?lang?ç süresi (saniye)
+        /// <summary>
+        /// Singleton instance of TimeManager.
+        /// </summary>
+        public static TimeManager Instance;
 
-        [SerializeField, Tooltip("The time interval for the timer updates (in seconds).")]
-        private float _updateInterval = 1f; // Zaman güncelleme aral??? (saniye)
+        [Tooltip("Total game time elapsed in seconds.")]
+        private float gameTimeElapsed;
 
-        [SerializeField, Tooltip("The critical time threshold (in seconds).")]
-        private float _criticalTimeThreshold = 15f; // Kritik zaman e?i?i (saniye)
+        [Tooltip("Indicates whether the game time is running.")]
+        private bool isGameTimeRunning;
 
-        private float _currentTime; // ?u anki zaman
-        private bool _isTimerRunning; // Timer'?n çal???p çal??mad???n? kontrol eder
-        private Coroutine _freezeCoroutine; // Timer'? dondurmak için kullan?lan coroutine
+        [Tooltip("Countdown time left in seconds.")]
+        private float countdownTimeLeft;
 
-        // Events
-        public UnityEvent<float> OnTimeUpdated; // Zaman güncellendi?inde tetiklenen event
-        public UnityEvent OnTimerStarted; // Timer ba?lad???nda tetiklenen event
-        public UnityEvent OnTimerPaused; // Timer duraklat?ld???nda tetiklenen event
-        public UnityEvent OnTimerResumed; // Timer devam ettirildi?inde tetiklenen event
-        public UnityEvent OnTimerStopped; // Timer durduruldu?unda tetiklenen event
-        public UnityEvent OnTimeCritical; // Zaman kritik e?i?e dü?tü?ünde tetiklenen event
-        public UnityEvent OnTimeFinished; // Zaman s?f?rland???nda tetiklenen event
+        [Tooltip("Indicates whether the countdown is active.")]
+        private bool countdownActive;
 
-        private void Start()
+        [Tooltip("Event invoked when game time starts.")]
+        public UnityEvent OnTimeStart = new UnityEvent();
+
+        [Tooltip("Event invoked when game time ends.")]
+        public UnityEvent OnTimeEnd = new UnityEvent();
+
+        [Tooltip("Event invoked when a countdown starts.")]
+        public UnityEvent OnCountDownStart = new UnityEvent();
+
+        [Tooltip("Event invoked when a countdown ends.")]
+        public UnityEvent OnCountDownEnd = new UnityEvent();
+
+        private void Awake()
         {
-            // Oyunun ba?lang?c?nda timer'? ba?lat
-            StartTimer(_initialTime);
+            if (Instance == null)
+                Instance = this;
+            else
+                Destroy(gameObject);
         }
 
-        /// <summary>
-        /// Timer'? belirtilen süre ile ba?lat?r.
-        /// </summary>
-        /// <param name="timeInSeconds">Ba?lang?ç süresi (saniye)</param>
-        public void StartTimer(float timeInSeconds)
+        private void Update()
         {
-            StopTimer(); // Mevcut timer varsa durdur
-            _currentTime = timeInSeconds; // Yeni süreyi ayarla
-            _isTimerRunning = true; // Timer'? çal??t?r
-            OnTimerStarted?.Invoke(); // Timer ba?lad???nda event tetiklenir
-            StartCoroutine(TimerCoroutine()); // Timer coroutine'ini ba?lat
-        }
+            if (isGameTimeRunning)
+                gameTimeElapsed += Time.deltaTime;
 
-        /// <summary>
-        /// Timer'?n countdown (geri say?m) i?lemi.
-        /// </summary>
-        private IEnumerator TimerCoroutine()
-        {
-            while (_isTimerRunning)
+            if (countdownActive)
             {
-                yield return new WaitForSeconds(_updateInterval); // Update intervali kadar bekle
+                countdownTimeLeft -= Time.deltaTime;
 
-                _currentTime -= _updateInterval; // Zaman? azalt
-                OnTimeUpdated?.Invoke(_currentTime); // Zaman güncellendi?inde event tetiklenir
-
-                if (_currentTime <= _criticalTimeThreshold && _currentTime > 0)
+                if (countdownTimeLeft <= 0)
                 {
-                    OnTimeCritical?.Invoke(); // Kritik e?i?e dü?tü?ünde event tetiklenir
-                }
-
-                if (_currentTime <= 0)
-                {
-                    HandleTimeExpired(); // Zaman s?f?rland???nda i?lemi ba?lat
-                    break;
+                    countdownActive = false;
+                    countdownTimeLeft = 0;
+                    OnCountDownEnd.Invoke();
                 }
             }
         }
 
         /// <summary>
-        /// Zaman s?f?rland???nda yap?lacak i?lemler.
+        /// Starts tracking the game time from zero.
         /// </summary>
-        private void HandleTimeExpired()
+        public void StartTime()
         {
-            _currentTime = 0; // Zaman? s?f?rla
-            _isTimerRunning = false; // Timer'? durdur
-            OnTimeFinished?.Invoke(); // Zaman bitince event tetiklenir
+            isGameTimeRunning = true;
+            gameTimeElapsed = 0;
+            OnTimeStart.Invoke();
         }
 
         /// <summary>
-        /// Timer'? duraklat?r.
+        /// Pauses the game time.
         /// </summary>
-        public void PauseTimer()
+        public void PauseTime()
         {
-            if (!_isTimerRunning) return; // Timer çal??m?yorsa ç?k
-
-            _isTimerRunning = false; // Timer'? durdur
-            OnTimerPaused?.Invoke(); // Timer duraklat?ld???nda event tetiklenir
+            isGameTimeRunning = false;
         }
 
         /// <summary>
-        /// Timer'? devam ettirir.
+        /// Resumes the game time.
         /// </summary>
-        public void ResumeTimer()
+        public void ResumeTime()
         {
-            if (_isTimerRunning) return; // Timer zaten çal???yorsa ç?k
-
-            _isTimerRunning = true; // Timer'? tekrar ba?lat
-            OnTimerResumed?.Invoke(); // Timer devam ettirildi?inde event tetiklenir
-            StartCoroutine(TimerCoroutine()); // Timer coroutine'ini ba?lat
+            isGameTimeRunning = true;
         }
 
         /// <summary>
-        /// Timer'? tamamen durdurur.
+        /// Starts a countdown from three seconds.
         /// </summary>
-        public void StopTimer()
+        public void CountdownFromThree()
         {
-            _isTimerRunning = false; // Timer'? durdur
-            StopAllCoroutines(); // Tüm coroutine'leri durdur
-            OnTimerStopped?.Invoke(); // Timer durduruldu?unda event tetiklenir
+            countdownTimeLeft = 3f;
+            countdownActive = true;
+            OnCountDownStart.Invoke();
         }
 
         /// <summary>
-        /// Timer'a ekstra süre ekler.
+        /// Gets the total elapsed game time.
         /// </summary>
-        /// <param name="extraTime">Ekstra süre (saniye)</param>
-        public void AddExtraTime(float extraTime)
+        /// <returns>Elapsed game time in seconds.</returns>
+        public float GetGameTimeElapsed()
         {
-            _currentTime += extraTime; // Ekstra süreyi ekle
-            OnTimeUpdated?.Invoke(_currentTime); // Zaman güncellendi?inde event tetiklenir
+            return gameTimeElapsed;
         }
 
         /// <summary>
-        /// Timer'? belirli bir süre dondurur.
+        /// Checks if a countdown is currently active.
         /// </summary>
-        /// <param name="duration">Dondurma süresi (saniye)</param>
-        public void FreezeTimer(float duration)
+        /// <returns>True if a countdown is active, otherwise false.</returns>
+        public bool IsCountdownActive()
         {
-            if (_freezeCoroutine != null) return; // E?er zaten bir freeze coroutine'i varsa, ç?k
-
-            PauseTimer(); // Timer'? duraklat
-            _freezeCoroutine = StartCoroutine(ResumeTimerAfterFreeze(duration)); // Dondurmay? ba?lat
+            return countdownActive;
         }
 
         /// <summary>
-        /// Dondurma süresi tamamland?ktan sonra timer'? devam ettirir.
+        /// Gets the remaining time of the countdown.
         /// </summary>
-        /// <param name="duration">Dondurma süresi (saniye)</param>
-        private IEnumerator ResumeTimerAfterFreeze(float duration)
+        /// <returns>Countdown time left in seconds.</returns>
+        public float GetCountdownTimeLeft()
         {
-            yield return new WaitForSeconds(duration); // Dondurma süresi kadar bekle
-            ResumeTimer(); // Timer'? devam ettir
-            _freezeCoroutine = null; // Coroutine bitince null yap
-        }
-
-        /// <summary>
-        /// Global zaman efekti için Time.timeScale'? ayarlar.
-        /// </summary>
-        /// <param name="scale">Yeni zaman h?z? (1 normal h?zd?r).</param>
-        public void SetTimeScale(float scale)
-        {
-            Time.timeScale = scale; // Time.timeScale'? ayarla
-        }
-
-        /// <summary>
-        /// Timer'? ba?taki süre ile s?f?rlar.
-        /// </summary>
-        public void ResetTimer()
-        {
-            StopTimer(); // Timer'? durdur
-            StartTimer(_initialTime); // Timer'? ba?lat
-        }
-
-        /// <summary>
-        /// ?u anki kalan süreyi döndürür.
-        /// </summary>
-        public float GetCurrentTime()
-        {
-            return _currentTime; // Kalan süreyi döndür
-        }
-
-        /// <summary>
-        /// Timer'?n çal???p çal??mad???n? kontrol eder.
-        /// </summary>
-        public bool IsTimerRunning()
-        {
-            return _isTimerRunning; // Timer çal???yorsa true döndür
+            return countdownTimeLeft;
         }
     }
 }

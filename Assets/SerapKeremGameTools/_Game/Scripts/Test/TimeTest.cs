@@ -4,94 +4,107 @@ using TMPro;
 
 namespace SerapKeremGameTools._Game._TimeSystem
 {
+    /// <summary>
+    /// Provides a test interface for TimeManager functionality using UI elements.
+    /// </summary>
     public class TestTimeManager : MonoBehaviour
     {
-        [Header("TimeManager Reference")]
-        public TimeManager timeManager;
+        [Tooltip("Displays the elapsed game time.")]
+        public TextMeshProUGUI timeText;
 
-        [Header("UI Elements")]
-        public TextMeshProUGUI timerText;
-        public TextMeshProUGUI statusText;
-        public int addTime=5;
-        public int freezeTime=5;
+        [Tooltip("Displays the remaining countdown time.")]
+        public TextMeshProUGUI countdownText;
+
+        [Tooltip("Button to start the game time.")]
+        public Button startButton;
+
+        [Tooltip("Button to pause the game time.")]
+        public Button pauseButton;
+
+        [Tooltip("Button to resume the game time.")]
+        public Button resumeButton;
+
+        [Tooltip("Button to start a countdown from 3 seconds.")]
+        public Button countdownButton;
 
         private void Start()
         {
-            // Bağlantı sağlamak için TimeManager eventlerini dinle
-            timeManager.OnTimeUpdated.AddListener(UpdateTimerUI);
-            timeManager.OnTimerStarted.AddListener(() => UpdateStatusUI("Timer Started"));
-            timeManager.OnTimerPaused.AddListener(() => UpdateStatusUI("Timer Paused"));
-            timeManager.OnTimerResumed.AddListener(() => UpdateStatusUI("Timer Resumed"));
-            timeManager.OnTimerStopped.AddListener(() => UpdateStatusUI("Timer Stopped"));
-            timeManager.OnTimeCritical.AddListener(() => UpdateStatusUI("Critical Time!"));
-            timeManager.OnTimeFinished.AddListener(() => UpdateStatusUI("Time Finished"));
+            startButton.onClick.AddListener(StartGame);
+            pauseButton.onClick.AddListener(PauseGame);
+            resumeButton.onClick.AddListener(ResumeGame);
+            countdownButton.onClick.AddListener(StartCountdown);
+
+            TimeManager.Instance.OnTimeStart.AddListener(OnTimeStart);
+            TimeManager.Instance.OnTimeEnd.AddListener(OnTimeEnd);
+            TimeManager.Instance.OnCountDownStart.AddListener(OnCountDownStart);
+            TimeManager.Instance.OnCountDownEnd.AddListener(OnCountDownEnd);
         }
 
-        private void UpdateTimerUI(float currentTime)
+        /// <summary>
+        /// Starts the game time using TimeManager.
+        /// </summary>
+        private void StartGame()
         {
-            // Kalan süreyi güncelle
-            timerText.text = $"Time Remaining: {currentTime:F2} seconds";
+            TimeManager.Instance.StartTime();
         }
 
-        private void UpdateStatusUI(string status)
+        /// <summary>
+        /// Pauses the game time using TimeManager.
+        /// </summary>
+        private void PauseGame()
         {
-            // Durum mesajını güncelle
-            statusText.text = $"Status: {status}";
+            TimeManager.Instance.PauseTime();
         }
 
-        // Timer başlatma
-        public void StartTimer()
+        /// <summary>
+        /// Resumes the game time using TimeManager.
+        /// </summary>
+        private void ResumeGame()
         {
-            timeManager.StartTimer(60f); // 60 saniyelik bir zamanlayıcı başlat
+            TimeManager.Instance.ResumeTime();
         }
 
-        // Timer duraklatma
-        public void PauseTimer()
+        /// <summary>
+        /// Starts a countdown from 3 seconds using TimeManager.
+        /// </summary>
+        private void StartCountdown()
         {
-            timeManager.PauseTimer();
+            TimeManager.Instance.CountdownFromThree();
         }
 
-        // Timer devam ettirme
-        public void ResumeTimer()
+        private void OnTimeStart()
         {
-            timeManager.ResumeTimer();
+            Debug.Log("Game time started.");
         }
 
-        // Timer durdurma
-        public void StopTimer()
+        private void OnTimeEnd()
         {
-            timeManager.StopTimer();
+            Debug.Log("Game time ended.");
         }
 
-        // Timer sıfırlama
-        public void ResetTimer()
+        private void OnCountDownStart()
         {
-            timeManager.ResetTimer();
+            Debug.Log("Countdown started.");
         }
 
-        // Zaman ekleme
-        public void AddTime()
+        private void OnCountDownEnd()
         {
-            if (float.TryParse(addTime.ToString(), out float extraTime))
+            Debug.Log("Countdown ended.");
+        }
+
+        private void Update()
+        {
+            // Update the game time display
+            timeText.text = $"Time: {TimeManager.Instance.GetGameTimeElapsed():F2}";
+
+            // Update the countdown display
+            if (TimeManager.Instance.IsCountdownActive())
             {
-                timeManager.AddExtraTime(extraTime);
+                countdownText.text = $"Countdown: {TimeManager.Instance.GetCountdownTimeLeft():F2}";
             }
             else
             {
-                UpdateStatusUI("Invalid time input!");
-            }
-        }
-
-        // Timer dondurma
-        public void FreezeTime()
-        {
-            if (float.TryParse(freezeTime.ToString(), out float freezeDuration))
-            {
-                timeManager.FreezeTimer(freezeDuration);
-            }
-            else
-            {
-                UpdateStatusUI("Invalid freeze duration input!");
+                countdownText.text = "Countdown: --";
             }
         }
     }
