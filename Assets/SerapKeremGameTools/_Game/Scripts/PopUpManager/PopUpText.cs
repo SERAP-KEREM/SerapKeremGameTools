@@ -4,24 +4,35 @@ using TMPro;
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
     /// <summary>
-    /// This class represents a pop-up text object that can be initialized with a custom string.
-    /// It handles the update of the text content displayed by the TextMeshPro component.
+    /// Manages the initialization of pop-up text in 3D space.
     /// </summary>
     public class PopUpText : MonoBehaviour
     {
-        [SerializeField, Tooltip("The TextMeshProUGUI component that displays the pop-up text.")]
-        private TextMeshProUGUI textComponent;
+        [Tooltip("The TextMeshPro component used to display the text.")]
+        [SerializeField] private TextMeshPro textComponent;
+
+        private void Awake()
+        {
+            // E?er Inspector'da atanmad?ysa otomatik olarak atay?n.
+            if (textComponent == null)
+            {
+                textComponent = GetComponent<TextMeshPro>();
+                if (textComponent == null)
+                {
+                    Debug.LogError("Text component is missing on the GameObject!", this);
+                }
+            }
+        }
 
         /// <summary>
-        /// Initializes the pop-up text with a given string.
-        /// This method updates the text displayed in the TextMeshProUGUI component.
+        /// Initializes the pop-up text with the given content.
         /// </summary>
-        /// <param name="text">The text to display in the pop-up.</param>
+        /// <param name="text">The text to display.</param>
         public void Initialize(string text)
         {
             if (textComponent != null)
             {
-                textComponent.text = text; 
+                textComponent.text = text;
             }
             else
             {

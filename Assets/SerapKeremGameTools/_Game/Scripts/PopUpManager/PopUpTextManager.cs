@@ -1,21 +1,15 @@
 using UnityEngine;
 using SerapKeremGameTools._Game._objectPool;
 using System.Collections;
+using SerapKeremGameTools._Game._Singleton;
 
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
-    /// <summary>
-    /// Manages the pop-up text animations and pooling.
-    /// Handles the creation, animation, and return of pop-up text objects.
-    /// </summary>
-    public class PopUpTextManager : MonoBehaviour
+    public class PopUpTextManager : MonoSingleton<PopUpTextManager>
     {
         [Header("Pop-Up Settings")]
-        [SerializeField, Tooltip("The prefab for the pop-up text.")]
+        [SerializeField, Tooltip("The prefab for the pop-up text (using TextMeshPro or 3D Text).")]
         private PopUpText popUpTextPrefab;
-
-        [SerializeField, Tooltip("The parent transform for positioning the pop-up texts.")]
-        private Transform parent;
 
         [SerializeField, Tooltip("The initial pool size for pop-up texts.")]
         private int poolSize = 10;
@@ -36,55 +30,32 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         [SerializeField, Tooltip("The offset used for the sliding animation.")]
         private Vector3 slideOffset = new Vector3(0, 2, 0);
 
+        [Header("Font Settings")]
+        [SerializeField, Tooltip("Scale applied to the pop-up text during the animation.")]
+        private Vector3 _popUpTextScale = Vector3.one;  // Global scale for pop-up text
+
         private ObjectPool<PopUpText> popUpTextPool;
 
-        /// <summary>
-        /// The singleton instance of PopUpTextManager.
-        /// </summary>
-        public static PopUpTextManager Instance { get; private set; }
-
-        private void Awake()
+        protected override void Awake()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
-
-            popUpTextPool = new ObjectPool<PopUpText>(popUpTextPrefab, poolSize, parent);
+            base.Awake();
+            popUpTextPool = new ObjectPool<PopUpText>(popUpTextPrefab, poolSize, transform);
         }
 
-        /// <summary>
-        /// Shows a pop-up text at a given position with a specified animation type.
-        /// </summary>
-        /// <param name="position">The position where the pop-up text will appear.</param>
-        /// <param name="text">The text to display.</param>
-        /// <param name="customDuration">The custom duration for the text to stay on screen.</param>
-        /// <param name="animationType">The animation type for the pop-up text.</param>
         public void ShowPopUpText(Vector3 position, string text, float customDuration, PopUpAnimationType animationType)
         {
             PopUpText popUpText = popUpTextPool.GetObject();
             popUpText.transform.position = position;
             popUpText.Initialize(text);
 
-            // Choose animation type
+            // Apply the pop-up scale
+            popUpText.transform.localScale = _popUpTextScale;
+
             float duration = customDuration > 0 ? customDuration : animationDuration; // Default or custom duration
             StartCoroutine(HandleAnimation(popUpText, duration, animationType));
-
             StartCoroutine(ReturnPopUpTextAfterDelay(popUpText, duration + hideDelay));
         }
 
-        /// <summary>
-        /// Handles the chosen animation for the pop-up text.
-        /// </summary>
-        /// <param name="popUpText">The pop-up text to animate.</param>
-        /// <param name="duration">The duration of the animation.</param>
-        /// <param name="animationType">The type of animation to apply.</param>
-        /// <returns>Returns an IEnumerator for coroutine.</returns>
         private IEnumerator HandleAnimation(PopUpText popUpText, float duration, PopUpAnimationType animationType)
         {
             switch (animationType)
@@ -104,16 +75,10 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             }
         }
 
-        /// <summary>
-        /// Animates the pop-up text with scaling and fading effects.
-        /// </summary>
-        /// <param name="popUpText">The pop-up text to animate.</param>
-        /// <param name="duration">The duration of the animation.</param>
-        /// <returns>Returns an IEnumerator for coroutine.</returns>
         private IEnumerator ScaleAndFadeAnimation(PopUpText popUpText, float duration)
         {
             Vector3 startScale = Vector3.zero;
-            Vector3 endScale = Vector3.one;
+            Vector3 endScale = _popUpTextScale;  // Use the scale defined in inspector
             float elapsedTime = 0f;
 
             while (elapsedTime < animationDuration)
@@ -136,13 +101,6 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             }
         }
 
-        /// <summary>
-        /// Animates the pop-up text with sliding motion.
-        /// </summary>
-        /// <param name="popUpText">The pop-up text to animate.</param>
-        /// <param name="offset">The offset direction for the sliding motion.</param>
-        /// <param name="duration">The duration of the animation.</param>
-        /// <returns>Returns an IEnumerator for coroutine.</returns>
         private IEnumerator SlideAnimation(PopUpText popUpText, Vector3 offset, float duration)
         {
             Vector3 startPosition = popUpText.transform.position;
@@ -158,15 +116,9 @@ namespace SerapKeremGameTools._Game._PopUpSystem
                 yield return null;
             }
 
-            popUpText.transform.position = targetPosition; // Set final position
+            popUpText.transform.position = targetPosition;
         }
 
-        /// <summary>
-        /// Animates the pop-up text with a bounce effect.
-        /// </summary>
-        /// <param name="popUpText">The pop-up text to animate.</param>
-        /// <param name="duration">The duration of the animation.</param>
-        /// <returns>Returns an IEnumerator for coroutine.</returns>
         private IEnumerator BounceAnimation(PopUpText popUpText, float duration)
         {
             Vector3 startPosition = popUpText.transform.position;
@@ -184,25 +136,15 @@ namespace SerapKeremGameTools._Game._PopUpSystem
                 }
             }
 
-            popUpText.transform.position = startPosition; // Reset to start position
+            popUpText.transform.position = startPosition;
         }
 
-        /// <summary>
-        /// Returns the pop-up text to the object pool after a delay.
-        /// </summary>
-        /// <param name="popUpText">The pop-up text to return.</param>
-        /// <param name="delay">The delay before returning the pop-up text.</param>
-        /// <returns>Returns an IEnumerator for coroutine.</returns>
         private IEnumerator ReturnPopUpTextAfterDelay(PopUpText popUpText, float delay)
         {
             yield return new WaitForSeconds(delay);
             ReturnPopUpText(popUpText);
         }
 
-        /// <summary>
-        /// Returns the pop-up text to the object pool.
-        /// </summary>
-        /// <param name="popUpText">The pop-up text to return to the pool.</param>
         public void ReturnPopUpText(PopUpText popUpText)
         {
             popUpTextPool.ReturnObject(popUpText);
