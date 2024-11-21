@@ -1,35 +1,40 @@
 using UnityEngine;
 using System.Collections.Generic;
-using SerapKeremGameTools._Game._PopUpSystem; // PopUpSpriteRendererManager'? kullanabilmek için
 
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
     /// <summary>
-    /// This class is responsible for testing a SpriteRenderer-based pop-up system.
-    /// It listens for user input (mouse click or screen touch) and shows a pop-up with a random sprite
-    /// from a list of options. The pop-up's position and duration can be configured.
+    /// This class is responsible for testing the pop-up sprite system.
+    /// It listens for user input (mouse click or screen touch) and shows a pop-up sprite
+    /// from a list of sprite options. The pop-up's position, duration, and animation type can be configured.
     /// </summary>
-    public class SpritePopupTest : MonoBehaviour
+    public class PopupSpriteTest : MonoBehaviour
     {
-        [Header("Pop-Up Settings")]
+        [Header("Pop-Up Sprite Settings")]
+
+        [SerializeField, Tooltip("Reference to the PopUpSpriteRendererManager that handles the pop-up creation.")]
+        private PopUpSpriteRendererManager popUpSpriteManager;
 
         [SerializeField, Tooltip("List of sprites to choose from when creating a pop-up.")]
-        private List<Sprite> _popUpSpriteOptions = new List<Sprite>();
+        private List<Sprite> popUpSpriteOptions = new List<Sprite>();
 
         [SerializeField, Tooltip("The position at which the pop-up sprite will appear.")]
-        private Vector3 _popUpPosition = Vector3.zero;
+        private Vector3 popUpPosition = Vector3.zero;
 
         [SerializeField, Range(0.1f, 2f), Tooltip("Duration for which the pop-up sprite will remain visible.")]
-        private float _popUpDuration = 0.5f;
+        private float popUpDuration = 0.5f;
 
-        private System.Random _random = new System.Random();
+        [SerializeField, Tooltip("Animation type for the pop-up sprite.")]
+        private PopUpAnimationType animationType = PopUpAnimationType.ScaleAndFade;
+
+        private System.Random random = new System.Random();
 
         /// <summary>
         /// Update is called once per frame. This checks for user input and triggers the pop-up if needed.
         /// </summary>
         private void Update()
         {
-            // Check for mouse click or screen touch to show the pop-up
+            // Check for mouse click or screen touch to show the pop-up sprite
             if (Input.GetMouseButtonDown(0) || Input.touchCount > 0)
             {
                 ShowPopUp();
@@ -41,23 +46,13 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         /// </summary>
         private void ShowPopUp()
         {
-            if (_popUpSpriteOptions.Count == 0) return;
+            if (popUpSpriteOptions.Count == 0) return;
 
             // Randomly choose a sprite from the available options
-            Sprite selectedSprite = _popUpSpriteOptions[_random.Next(_popUpSpriteOptions.Count)];
+            Sprite sprite = popUpSpriteOptions[random.Next(popUpSpriteOptions.Count)];
 
-            // Get a PopUpSpriteRenderer from the Object Pool
-            PopUpSpriteRenderer popUpSprite = PopUpSpriteRendererManager.Instance.GetPopUpSpriteRenderer();
-
-            if (popUpSprite)
-            {
-                // Set the position and sprite
-                popUpSprite.transform.position = _popUpPosition;
-                popUpSprite.Initialize(selectedSprite);
-
-                // Show the sprite with animation
-                PopUpSpriteRendererManager.Instance.ShowPopUpSprite(_popUpPosition, selectedSprite, _popUpDuration, PopUpAnimationType.ScaleAndFade);
-            }
+            // Show the pop-up with the selected sprite, duration, and animation type
+            popUpSpriteManager.ShowPopUpSprite(popUpPosition, sprite, popUpDuration, animationType);
         }
     }
 }

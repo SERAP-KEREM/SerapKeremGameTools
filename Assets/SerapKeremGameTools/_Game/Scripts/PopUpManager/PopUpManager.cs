@@ -1,29 +1,18 @@
 using UnityEngine;
 using System.Collections;
+using SerapKeremGameTools._Game._Singleton;
+using SerapKeremGameTools._Game._objectPool;
 
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
-
-    public abstract class PopUpManager : MonoBehaviour
+    // Base Manager for PopUp handling (common functionality for both PopUpTextManager and PopUpSpriteRendererManager)
+    public interface PopUpManager
     {
-        [Header("Animation Settings")]
-        [SerializeField] protected float animationDuration = 0.5f;
-        [SerializeField] protected float hideDelay = 1f;
-
-        // Abstract method to handle specific pop-up display logic
-        protected abstract void ShowPopUp(Vector3 position, string text, float customDuration, PopUpAnimationType animationType);
-
-        // Abstract method for handling animation logic (implemented in subclasses)
-        protected abstract IEnumerator HandleAnimation(GameObject popUpObject, float duration, PopUpAnimationType animationType);
-
-        // Common method to handle returning objects to the pool after a delay
-        protected IEnumerator ReturnPopUpAfterDelay(GameObject popUpObject, float delay)
+        // ShowPopUp metodu, alt s?n?flar taraf?ndan özelle?tirilebilir
+        public virtual void ShowPopUp(Vector3 position, string text = null, Sprite sprite = null, float customDuration = 0, PopUpAnimationType animationType = PopUpAnimationType.SlideDown)
         {
-            yield return new WaitForSeconds(delay);
-            ReturnPopUp(popUpObject);
+            // Bu metod genel bir i?lem yapmaz, alt s?n?flar bu metodu override eder
+            // Örne?in, her bir PopUpTextManager veya PopUpSpriteRendererManager, ShowPopUp metodunu kendisine özel ?ekilde implement eder.
         }
-
-        // Placeholder method to be implemented by subclasses for returning the object
-        protected abstract void ReturnPopUp(GameObject popUpObject);
     }
 }

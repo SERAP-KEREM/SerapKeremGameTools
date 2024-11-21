@@ -43,14 +43,14 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         {
             // Get a PopUpSpriteRenderer from the pool
             PopUpSpriteRenderer popUpSprite = popUpSpritePool.GetObject();
-            
+
             // Set the position of the sprite
             popUpSprite.transform.position = position;
             // Initialize the sprite's visual properties
             popUpSprite.Initialize(sprite);
 
             float duration = customDuration > 0 ? customDuration : animationDuration; // Default or custom duration
-            
+
             // Start animation coroutine
             StartCoroutine(HandleAnimation(popUpSprite, duration, animationType));
             // After the delay, return the object to the pool

@@ -4,7 +4,7 @@ using TMPro;
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
     /// <summary>
-    /// Manages the initialization of pop-up text in 3D space.
+    /// Manages the initialization and reset of pop-up text in 3D space.
     /// </summary>
     public class PopUpText : MonoBehaviour
     {
@@ -38,6 +38,20 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             {
                 Debug.LogError("Text component is not assigned in the PopUpText.");
             }
+        }
+
+        /// <summary>
+        /// Resets the properties of the pop-up text (e.g., clears the text and resets position).
+        /// </summary>
+        public void ResetProperties()
+        {
+            if (textComponent != null)
+            {
+                textComponent.text = ""; // Pop-up metni temizleniyor
+            }
+            // E?er pozisyon ve ölçek s?f?rlanacaksa:
+            transform.position = Vector3.zero; // Pozisyon s?f?rlan?yor
+            transform.localScale = Vector3.one; // Ölçek ba?lang?ç de?erine s?f?rlan?yor
         }
     }
 }

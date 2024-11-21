@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     public class PopUpSpriteRenderer : MonoBehaviour
     {
         private SpriteRenderer spriteRenderer;
@@ -11,25 +12,46 @@ namespace SerapKeremGameTools._Game._PopUpSystem
 
         private void Awake()
         {
+            // SpriteRenderer bile?enini al ve ba?lang?ç ölçe?ini kaydet
             spriteRenderer = GetComponent<SpriteRenderer>();
             initialScale = transform.localScale;
         }
 
-        public void Initialize(Sprite sprite)
+        /// <summary>
+        /// Pop-up Sprite'? ba?lat?r.
+        /// </summary>
+        /// <param name="sprite">Gösterilecek Sprite.</param>
+        /// <param name="scaleMultiplier">Sprite'?n büyüklü?ünü belirleyen çarpan.</param>
+        public void Initialize(Sprite sprite, float scaleMultiplier = 1f)
         {
-            spriteRenderer.sprite = sprite;
-            // Set the initial scale if needed
-            transform.localScale = initialScale;
-            // Reset any other properties that are important, such as alpha
-            spriteRenderer.color = Color.white; // Reset color
+            if (sprite == null)
+            {
+                Debug.LogError("PopUpSpriteRenderer: Initialize edilmek istenen sprite null!");
+                return;
+            }
+
+            spriteRenderer.sprite = sprite; // Sprite'? ata
+            transform.localScale = initialScale * scaleMultiplier; // Ölçe?i çarpan ile ayarla
+            spriteRenderer.color = Color.white; // Renk s?f?rla
         }
 
-        // Reset the sprite's properties when returning to the pool
+        /// <summary>
+        /// Pop-up Sprite'? varsay?lan durumuna s?f?rlar.
+        /// </summary>
         public void ResetProperties()
         {
-            transform.localScale = initialScale; // Reset scale
-            spriteRenderer.color = Color.white;  // Reset color (or any other properties you need)
-            spriteRenderer.sprite = null; // Clear the sprite
+            transform.localScale = initialScale; // Ölçe?i s?f?rla
+            spriteRenderer.color = Color.white; // Renk s?f?rla
+            spriteRenderer.sprite = null; // Sprite'? temizle
+        }
+
+        /// <summary>
+        /// Sprite'?n ölçe?ini dinamik olarak ayarlar.
+        /// </summary>
+        /// <param name="scaleMultiplier">Ölçek çarpan?.</param>
+        public void SetScale(float scaleMultiplier)
+        {
+            transform.localScale = initialScale * scaleMultiplier;
         }
     }
 }
