@@ -42,7 +42,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             popUpTextPool = new ObjectPool<PopUpText>(popUpTextPrefab, poolSize, transform);
         }
 
-        public void ShowPopUpText(Vector3 position, string text, float customDuration, PopUpAnimationType animationType)
+        public  void ShowPopUpText(Vector3 position, string text, float customDuration, PopUpAnimationType animationType)
         {
             PopUpText popUpText = popUpTextPool.GetObject();
             popUpText.transform.position = position;

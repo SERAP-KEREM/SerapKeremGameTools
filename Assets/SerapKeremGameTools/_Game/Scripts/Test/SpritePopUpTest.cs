@@ -8,12 +8,12 @@ namespace SerapKeremGameTools._Game._PopUpSystem
     /// It listens for user input (mouse click or screen touch) and shows a pop-up sprite
     /// from a list of sprite options. The pop-up's position, duration, and animation type can be configured.
     /// </summary>
-    public class PopupSpriteTest : MonoBehaviour
+    public class PopupIconTest : MonoBehaviour
     {
         [Header("Pop-Up Sprite Settings")]
 
         [SerializeField, Tooltip("Reference to the PopUpSpriteRendererManager that handles the pop-up creation.")]
-        private PopUpSpriteRendererManager popUpSpriteManager;
+        private PopUpIconManager popUpIconManager;
 
         [SerializeField, Tooltip("List of sprites to choose from when creating a pop-up.")]
         private List<Sprite> popUpSpriteOptions = new List<Sprite>();
@@ -52,7 +52,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             Sprite sprite = popUpSpriteOptions[random.Next(popUpSpriteOptions.Count)];
 
             // Show the pop-up with the selected sprite, duration, and animation type
-            popUpSpriteManager.ShowPopUpSprite(popUpPosition, sprite, popUpDuration, animationType);
+            popUpIconManager.ShowPopUpSprite(popUpPosition, sprite, popUpDuration, animationType);
         }
     }
 }

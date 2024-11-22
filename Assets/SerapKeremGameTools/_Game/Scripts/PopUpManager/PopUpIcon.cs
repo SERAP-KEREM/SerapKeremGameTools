@@ -3,7 +3,7 @@ using UnityEngine;
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    public class PopUpSpriteRenderer : MonoBehaviour
+    public class PopUpIcon : MonoBehaviour
     {
         private SpriteRenderer spriteRenderer;
 

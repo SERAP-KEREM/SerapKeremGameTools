@@ -5,11 +5,11 @@ using SerapKeremGameTools._Game._Singleton;
 
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
-    public class PopUpSpriteRendererManager : MonoSingleton<PopUpSpriteRendererManager>
+    public class PopUpIconManager : MonoSingleton<PopUpIconManager>
     {
         [Header("Pop-Up Settings")]
         [SerializeField, Tooltip("The prefab for the pop-up sprite (using SpriteRenderer).")]
-        private PopUpSpriteRenderer popUpSpritePrefab;
+        private PopUpIcon popUpSpritePrefab;
 
         [SerializeField, Tooltip("The initial pool size for pop-up sprites.")]
         private int poolSize = 10;
@@ -30,19 +30,19 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         [SerializeField, Tooltip("The offset used for the sliding animation.")]
         private Vector3 slideOffset = new Vector3(0, 2, 0);
 
-        private ObjectPool<PopUpSpriteRenderer> popUpSpritePool;
+        private ObjectPool<PopUpIcon> popUpSpritePool;
 
         protected override void Awake()
         {
             base.Awake();
             // Create Object Pool for PopUpSpriteRenderer
-            popUpSpritePool = new ObjectPool<PopUpSpriteRenderer>(popUpSpritePrefab, poolSize, transform);
+            popUpSpritePool = new ObjectPool<PopUpIcon>(popUpSpritePrefab, poolSize, transform);
         }
 
         public void ShowPopUpSprite(Vector3 position, Sprite sprite, float customDuration, PopUpAnimationType animationType)
         {
             // Get a PopUpSpriteRenderer from the pool
-            PopUpSpriteRenderer popUpSprite = popUpSpritePool.GetObject();
+            PopUpIcon popUpSprite = popUpSpritePool.GetObject();
 
             // Set the position of the sprite
             popUpSprite.transform.position = position;
@@ -57,7 +57,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             StartCoroutine(ReturnPopUpSpriteAfterDelay(popUpSprite, duration + hideDelay));
         }
 
-        private IEnumerator HandleAnimation(PopUpSpriteRenderer popUpSprite, float duration, PopUpAnimationType animationType)
+        private IEnumerator HandleAnimation(PopUpIcon popUpSprite, float duration, PopUpAnimationType animationType)
         {
             switch (animationType)
             {
@@ -76,7 +76,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             }
         }
 
-        private IEnumerator ScaleAndFadeAnimation(PopUpSpriteRenderer popUpSprite, float duration)
+        private IEnumerator ScaleAndFadeAnimation(PopUpIcon popUpSprite, float duration)
         {
             Vector3 startScale = Vector3.zero;
             Vector3 endScale = Vector3.one;
@@ -102,7 +102,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             }
         }
 
-        private IEnumerator SlideAnimation(PopUpSpriteRenderer popUpSprite, Vector3 offset, float duration)
+        private IEnumerator SlideAnimation(PopUpIcon popUpSprite, Vector3 offset, float duration)
         {
             Vector3 startPosition = popUpSprite.transform.position;
             Vector3 targetPosition = startPosition + offset;
@@ -120,7 +120,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             popUpSprite.transform.position = targetPosition;
         }
 
-        private IEnumerator BounceAnimation(PopUpSpriteRenderer popUpSprite, float duration)
+        private IEnumerator BounceAnimation(PopUpIcon popUpSprite, float duration)
         {
             Vector3 startPosition = popUpSprite.transform.position;
             float elapsedTime = 0f;
@@ -140,14 +140,14 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             popUpSprite.transform.position = startPosition;
         }
 
-        private IEnumerator ReturnPopUpSpriteAfterDelay(PopUpSpriteRenderer popUpSprite, float delay)
+        private IEnumerator ReturnPopUpSpriteAfterDelay(PopUpIcon popUpSprite, float delay)
         {
             yield return new WaitForSeconds(delay);
             // Return the sprite to the pool after animation is done
             ReturnPopUpSprite(popUpSprite);
         }
 
-        public void ReturnPopUpSprite(PopUpSpriteRenderer popUpSprite)
+        public void ReturnPopUpSprite(PopUpIcon popUpSprite)
         {
             // Reset the sprite properties if needed before returning
             popUpSprite.ResetProperties();
@@ -155,7 +155,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             popUpSpritePool.ReturnObject(popUpSprite);
         }
 
-        public PopUpSpriteRenderer GetPopUpSpriteRenderer()
+        public PopUpIcon GetPopUpSpriteRenderer()
         {
             // Object Pool'dan bir PopUpSpriteRenderer nesnesi al?r
             return popUpSpritePool.GetObject();
