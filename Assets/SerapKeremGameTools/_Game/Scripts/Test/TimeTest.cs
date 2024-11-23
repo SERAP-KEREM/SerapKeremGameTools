@@ -7,7 +7,7 @@ namespace SerapKeremGameTools._Game._TimeSystem
     /// <summary>
     /// Provides a test interface for TimeManager functionality using UI elements.
     /// </summary>
-    public class TestTimeManager : MonoBehaviour
+    public class TestTime : MonoBehaviour
     {
         [Tooltip("Displays the elapsed game time.")]
         public TextMeshProUGUI timeText;
@@ -24,16 +24,23 @@ namespace SerapKeremGameTools._Game._TimeSystem
         [Tooltip("Button to resume the game time.")]
         public Button resumeButton;
 
-        [Tooltip("Button to start a countdown from 3 seconds.")]
+        [Tooltip("Button to start a countdown from a specified duration.")]
         public Button countdownButton;
+
+        [Tooltip("Int to set the countdown duration.")]
+        public int countdown;
+
 
         private void Start()
         {
+            // Bind UI buttons to corresponding actions
             startButton.onClick.AddListener(StartGame);
             pauseButton.onClick.AddListener(PauseGame);
             resumeButton.onClick.AddListener(ResumeGame);
             countdownButton.onClick.AddListener(StartCountdown);
+           
 
+            // Bind TimeManager events to log actions
             TimeManager.Instance.OnTimeStart.AddListener(OnTimeStart);
             TimeManager.Instance.OnTimeEnd.AddListener(OnTimeEnd);
             TimeManager.Instance.OnCountDownStart.AddListener(OnCountDownStart);
@@ -64,12 +71,20 @@ namespace SerapKeremGameTools._Game._TimeSystem
             TimeManager.Instance.ResumeTime();
         }
 
+
         /// <summary>
-        /// Starts a countdown from 3 seconds using TimeManager.
+        /// Starts a countdown using TimeManager with a custom duration.
         /// </summary>
         private void StartCountdown()
         {
-            TimeManager.Instance.CountdownFromThree();
+            if (float.TryParse(countdown.ToString(), out float duration) && duration > 0)
+            {
+                TimeManager.Instance.StartCountdown(duration);
+            }
+            else
+            {
+                Debug.LogWarning("Invalid countdown duration! Please enter a positive number.");
+            }
         }
 
         private void OnTimeStart()
@@ -95,12 +110,12 @@ namespace SerapKeremGameTools._Game._TimeSystem
         private void Update()
         {
             // Update the game time display
-            timeText.text = $"Time: {TimeManager.Instance.GetGameTimeElapsed():F2}";
+            timeText.text = $"Elapsed Time: {TimeManager.Instance.GetGameTimeElapsed():F2} seconds";
 
             // Update the countdown display
             if (TimeManager.Instance.IsCountdownActive())
             {
-                countdownText.text = $"Countdown: {TimeManager.Instance.GetCountdownTimeLeft():F2}";
+                countdownText.text = $"Countdown: {TimeManager.Instance.GetCountdownTimeLeft():F2} seconds";
             }
             else
             {

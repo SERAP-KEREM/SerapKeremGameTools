@@ -44,14 +44,5 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             spriteRenderer.color = Color.white; // Renk s?f?rla
             spriteRenderer.sprite = null; // Sprite'? temizle
         }
-
-        /// <summary>
-        /// Sprite'?n ölçe?ini dinamik olarak ayarlar.
-        /// </summary>
-        /// <param name="scaleMultiplier">Ölçek çarpan?.</param>
-        public void SetScale(float scaleMultiplier)
-        {
-            transform.localScale = initialScale * scaleMultiplier;
-        }
     }
 }

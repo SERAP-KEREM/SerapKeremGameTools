@@ -5,19 +5,22 @@ using SerapKeremGameTools._Game._Singleton;
 
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
+    /// <summary>
+    /// Manages the pop-up icon animations and pooling system.
+    /// </summary>
     public class PopUpIconManager : MonoSingleton<PopUpIconManager>
     {
         [Header("Pop-Up Settings")]
         [SerializeField, Tooltip("The prefab for the pop-up sprite (using SpriteRenderer).")]
-        private PopUpIcon popUpSpritePrefab;
+        private PopUpIcon popUpIconPrefab;
 
         [SerializeField, Tooltip("The initial pool size for pop-up sprites.")]
         private int poolSize = 10;
 
+        [Header("Animation Settings")]
         [SerializeField, Tooltip("The delay before the pop-up sprite disappears.")]
         private float hideDelay = 1f;
 
-        [Header("Animation Settings")]
         [SerializeField, Tooltip("Duration of the animation.")]
         private float animationDuration = 0.5f;
 
@@ -36,9 +39,16 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         {
             base.Awake();
             // Create Object Pool for PopUpSpriteRenderer
-            popUpSpritePool = new ObjectPool<PopUpIcon>(popUpSpritePrefab, poolSize, transform);
+            popUpSpritePool = new ObjectPool<PopUpIcon>(popUpIconPrefab, poolSize, transform);
         }
 
+        /// <summary>
+        /// Displays a pop-up sprite with an animation.
+        /// </summary>
+        /// <param name="position">The position where the pop-up will appear.</param>
+        /// <param name="sprite">The sprite to display.</param>
+        /// <param name="customDuration">Custom duration for the animation.</param>
+        /// <param name="animationType">The type of animation to use.</param>
         public void ShowPopUpSprite(Vector3 position, Sprite sprite, float customDuration, PopUpAnimationType animationType)
         {
             // Get a PopUpSpriteRenderer from the pool
@@ -49,7 +59,8 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             // Initialize the sprite's visual properties
             popUpSprite.Initialize(sprite);
 
-            float duration = customDuration > 0 ? customDuration : animationDuration; // Default or custom duration
+            // Determine the duration for the animation
+            float duration = customDuration > 0 ? customDuration : animationDuration;
 
             // Start animation coroutine
             StartCoroutine(HandleAnimation(popUpSprite, duration, animationType));
@@ -57,6 +68,12 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             StartCoroutine(ReturnPopUpSpriteAfterDelay(popUpSprite, duration + hideDelay));
         }
 
+        /// <summary>
+        /// Handles the animation based on the selected type.
+        /// </summary>
+        /// <param name="popUpSprite">The pop-up sprite to animate.</param>
+        /// <param name="duration">Duration of the animation.</param>
+        /// <param name="animationType">The type of animation to apply.</param>
         private IEnumerator HandleAnimation(PopUpIcon popUpSprite, float duration, PopUpAnimationType animationType)
         {
             switch (animationType)
@@ -76,12 +93,18 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             }
         }
 
+        /// <summary>
+        /// Handles the scale and fade animation of the pop-up sprite.
+        /// </summary>
+        /// <param name="popUpSprite">The pop-up sprite to animate.</param>
+        /// <param name="duration">Duration of the animation.</param>
         private IEnumerator ScaleAndFadeAnimation(PopUpIcon popUpSprite, float duration)
         {
             Vector3 startScale = Vector3.zero;
             Vector3 endScale = Vector3.one;
             float elapsedTime = 0f;
 
+            // Animate scaling effect
             while (elapsedTime < animationDuration)
             {
                 float t = elapsedTime / animationDuration;
@@ -90,6 +113,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
                 yield return null;
             }
 
+            // Wait for the specified duration before reversing the animation
             yield return new WaitForSeconds(duration);
 
             elapsedTime = 0f;
@@ -102,12 +126,19 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             }
         }
 
+        /// <summary>
+        /// Handles the sliding animation of the pop-up sprite.
+        /// </summary>
+        /// <param name="popUpSprite">The pop-up sprite to animate.</param>
+        /// <param name="offset">The direction and distance to slide.</param>
+        /// <param name="duration">Duration of the animation.</param>
         private IEnumerator SlideAnimation(PopUpIcon popUpSprite, Vector3 offset, float duration)
         {
             Vector3 startPosition = popUpSprite.transform.position;
             Vector3 targetPosition = startPosition + offset;
             float elapsedTime = 0f;
 
+            // Animate sliding effect
             while (elapsedTime < duration)
             {
                 float t = elapsedTime / duration;
@@ -120,11 +151,17 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             popUpSprite.transform.position = targetPosition;
         }
 
+        /// <summary>
+        /// Handles the bounce animation of the pop-up sprite.
+        /// </summary>
+        /// <param name="popUpSprite">The pop-up sprite to animate.</param>
+        /// <param name="duration">Duration of the animation.</param>
         private IEnumerator BounceAnimation(PopUpIcon popUpSprite, float duration)
         {
             Vector3 startPosition = popUpSprite.transform.position;
             float elapsedTime = 0f;
 
+            // Animate bouncing effect
             for (int i = 0; i < bounceCount; i++)
             {
                 float t = 0f;
@@ -140,24 +177,37 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             popUpSprite.transform.position = startPosition;
         }
 
-        private IEnumerator ReturnPopUpSpriteAfterDelay(PopUpIcon popUpSprite, float delay)
+        /// <summary>
+        /// Returns the pop-up sprite to the pool after a specified delay.
+        /// </summary>
+        /// <param name="popUpIcon">The pop-up icon to return.</param>
+        /// <param name="delay">The time to wait before returning.</param>
+        private IEnumerator ReturnPopUpSpriteAfterDelay(PopUpIcon popUpIcon, float delay)
         {
             yield return new WaitForSeconds(delay);
             // Return the sprite to the pool after animation is done
-            ReturnPopUpSprite(popUpSprite);
+            ReturnPopUpSprite(popUpIcon);
         }
 
-        public void ReturnPopUpSprite(PopUpIcon popUpSprite)
+        /// <summary>
+        /// Returns a pop-up sprite to the pool.
+        /// </summary>
+        /// <param name="popUpIcon">The pop-up icon to return.</param>
+        public void ReturnPopUpSprite(PopUpIcon popUpIcon)
         {
             // Reset the sprite properties if needed before returning
-            popUpSprite.ResetProperties();
+            popUpIcon.ResetProperties();
             // Return the sprite to the pool
-            popUpSpritePool.ReturnObject(popUpSprite);
+            popUpSpritePool.ReturnObject(popUpIcon);
         }
 
+        /// <summary>
+        /// Retrieves a pop-up sprite renderer from the object pool.
+        /// </summary>
+        /// <returns>A PopUpIcon from the pool.</returns>
         public PopUpIcon GetPopUpSpriteRenderer()
         {
-            // Object Pool'dan bir PopUpSpriteRenderer nesnesi al?r
+            // Get an object from the pool
             return popUpSpritePool.GetObject();
         }
 

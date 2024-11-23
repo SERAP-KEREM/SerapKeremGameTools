@@ -3,10 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-
 namespace SerapKeremGameTools._Game._InputSystem
 {
-
     public class Selector : MonoBehaviour
     {
         [SerializeField] private PlayerInput playerInput; // PlayerInput referansı
