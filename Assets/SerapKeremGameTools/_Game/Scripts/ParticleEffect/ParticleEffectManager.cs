@@ -88,6 +88,21 @@ namespace SerapKeremGameTools._Game._ParticleEffectSystem
         }
 
         /// <summary>
+        /// This function finds and stops all ParticleSystem components attached to this object and its children.
+        /// It is used when the game is paused or when all effects need to be stopped.
+        /// </summary>
+        public void StopAllEffects()
+        {
+            // Stop any active particle effects
+            ParticleSystem[] allParticles = GetComponentsInChildren<ParticleSystem>();
+            foreach (var particle in allParticles)
+            {
+                particle.Stop(); // Stop the effect
+            }
+        }
+
+
+        /// <summary>
         /// Returns the particle system to the pool after it finishes playing.
         /// </summary>
         /// <param name="particleSystem">The particle system to return.</param>
