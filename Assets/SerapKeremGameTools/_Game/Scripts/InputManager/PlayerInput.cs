@@ -12,10 +12,25 @@ namespace SerapKeremGameTools._Game._InputSystem
         public UnityEvent OnMouseHeldEvent = new UnityEvent();
         public UnityEvent OnMouseUpEvent = new UnityEvent();
 
+        private Camera mainCamera;
+
+        private void Awake()
+        {
+            // Main Camera referans?n? kod içinde al?yoruz
+            mainCamera = Camera.main;
+            if (mainCamera == null)
+            {
+                Debug.LogError("No Main Camera found in the scene!");
+            }
+        }
+
         private void Update()
         {
-            // Fare pozisyonunu dünya koordinatlar?na dönü?tür
-            MousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
+            if (mainCamera != null)
+            {
+                // Fare pozisyonunu dünya koordinatlar?na dönü?tür
+                MousePosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCamera.nearClipPlane));
+            }
 
             // Fare t?klama olaylar?
             if (Input.GetMouseButtonDown(0)) // Sol fare tu?u
