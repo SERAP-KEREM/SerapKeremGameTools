@@ -11,10 +11,6 @@ namespace SerapKeremGameTools._Game._PopUpSystem
     public class PopupTextTest : MonoBehaviour
     {
         [Header("Pop-Up Settings")]
-
-        [SerializeField, Tooltip("Reference to the PopUpTextManager that handles the pop-up creation.")]
-        private PopUpTextManager _popUpTextManager;
-
         [SerializeField, Tooltip("List of messages to choose from when creating a pop-up.")]
         private List<string> _popUpTextOptions = new List<string>();
 
@@ -48,11 +44,13 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         {
             if (_popUpTextOptions.Count == 0) return;
 
+            Debug.Log("ShowPopUp");
+
             // Randomly choose a message from the available options
             string message = _popUpTextOptions[_random.Next(_popUpTextOptions.Count)];
 
             // Show the pop-up with the selected message, duration, and animation type
-            _popUpTextManager.ShowPopUpText(_popUpPosition, message, _popUpDuration, _animationType);
+            PopUpTextManager.Instance.ShowPopUpText(_popUpPosition, message, _popUpDuration, _animationType);
         }
     }
 }

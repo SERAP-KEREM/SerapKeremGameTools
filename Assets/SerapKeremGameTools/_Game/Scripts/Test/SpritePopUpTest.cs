@@ -11,10 +11,6 @@ namespace SerapKeremGameTools._Game._PopUpSystem
     public class PopupIconTest : MonoBehaviour
     {
         [Header("Pop-Up Sprite Settings")]
-
-        [SerializeField, Tooltip("Reference to the PopUpSpriteRendererManager that handles the pop-up creation.")]
-        private PopUpIconManager popUpIconManager;
-
         [SerializeField, Tooltip("List of sprites to choose from when creating a pop-up.")]
         private List<Sprite> popUpSpriteOptions = new List<Sprite>();
 
@@ -52,7 +48,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             Sprite sprite = popUpSpriteOptions[random.Next(popUpSpriteOptions.Count)];
 
             // Show the pop-up with the selected sprite, duration, and animation type
-            popUpIconManager.ShowPopUpSprite(popUpPosition, sprite, popUpDuration, animationType);
+            PopUpIconManager.Instance.ShowPopUpIcon(popUpPosition, sprite, popUpDuration, animationType);
         }
     }
 }

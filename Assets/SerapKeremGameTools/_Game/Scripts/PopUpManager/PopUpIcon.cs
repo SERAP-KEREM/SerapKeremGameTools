@@ -2,47 +2,56 @@ using UnityEngine;
 
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
-    [RequireComponent(typeof(SpriteRenderer))]
-    public class PopUpIcon : MonoBehaviour
+    /// <summary>
+    /// Manages a pop-up displaying an icon.
+    /// </summary>
+    public class PopUpIcon : PopUp
     {
-        private SpriteRenderer spriteRenderer;
+        [Header("Icon Settings")]
+        [Tooltip("The SpriteRenderer component used to display the pop-up icon.")]
+        [SerializeField] private SpriteRenderer spriteRenderer;
 
-        // Animation properties
-        private Vector3 initialScale;
-
-        private void Awake()
+        protected override void Awake()
         {
-            // SpriteRenderer bile?enini al ve ba?lang?ç ölçe?ini kaydet
-            spriteRenderer = GetComponent<SpriteRenderer>();
-            initialScale = transform.localScale;
+            base.Awake();
+            if (spriteRenderer == null)
+            {
+                spriteRenderer = GetComponent<SpriteRenderer>();
+            }
         }
 
         /// <summary>
-        /// Pop-up Sprite'? ba?lat?r.
+        /// Initializes the pop-up with the specified icon and scale.
         /// </summary>
-        /// <param name="sprite">Gösterilecek Sprite.</param>
-        /// <param name="scaleMultiplier">Sprite'?n büyüklü?ünü belirleyen çarpan.</param>
-        public void Initialize(Sprite sprite, float scaleMultiplier = 1f)
+        /// <param name="args">Expected: a Sprite and an optional float for scale multiplier.</param>
+        public override void Initialize(params object[] args)
         {
-            if (sprite == null)
+            if (args.Length == 0 || !(args[0] is Sprite sprite))
             {
-                Debug.LogError("PopUpSpriteRenderer: Initialize edilmek istenen sprite null!");
+                Debug.LogError("PopUpIcon: Invalid arguments for initialization.", this);
                 return;
             }
 
-            spriteRenderer.sprite = sprite; // Sprite'? ata
-            transform.localScale = initialScale * scaleMultiplier; // Ölçe?i çarpan ile ayarla
-            spriteRenderer.color = Color.white; // Renk s?f?rla
+            spriteRenderer.sprite = sprite;
+
+            if (args.Length > 1 && args[1] is float scaleMultiplier)
+            {
+                transform.localScale = initialScale * scaleMultiplier;
+            }
+
+            StartCoroutine(PlayScaleAnimation());
         }
 
         /// <summary>
-        /// Pop-up Sprite'? varsay?lan durumuna s?f?rlar.
+        /// Resets the pop-up icon and its properties.
         /// </summary>
-        public void ResetProperties()
+        public override void ResetProperties()
         {
-            transform.localScale = initialScale; // Ölçe?i s?f?rla
-            spriteRenderer.color = Color.white; // Renk s?f?rla
-            spriteRenderer.sprite = null; // Sprite'? temizle
+            base.ResetProperties();
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.sprite = null;
+            }
         }
     }
 }
