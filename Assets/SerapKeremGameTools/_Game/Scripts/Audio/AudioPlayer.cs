@@ -24,14 +24,14 @@ namespace SerapKeremGameTools._Game._AudioSystem
         {
             if (!audioSource.isPlaying)  // Eğer ses zaten çalmıyorsa
             {
-                audioSource.clip = audio.clip;
-                audioSource.volume = audio.volume;
-                audioSource.pitch = audio.pitch;
-                audioSource.loop = audio.loop;
+                audioSource.clip = audio.Clip;
+                audioSource.volume = audio.Volume;
+                audioSource.pitch = audio.Volume;
+                audioSource.loop = audio.Loop;
                 audioSource.Play();
 
                 // Eğer ses döngü yapmıyorsa, bitince havuza geri dönsün
-                if (!audio.loop)
+                if (!audio.Loop)
                 {
                     StartCoroutine(ReturnToPoolAfterPlaying(audio));
                 }
@@ -44,7 +44,7 @@ namespace SerapKeremGameTools._Game._AudioSystem
         /// </summary>
         private IEnumerator ReturnToPoolAfterPlaying(Audio audio)
         {
-            yield return new WaitForSeconds(audio.clip.length);
+            yield return new WaitForSeconds(audio.Clip.length);
             AudioManager.Instance.ReturnAudioPlayerToPool(this);
         }
     }

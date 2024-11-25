@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3981648476514940530}
   - component: {fileID: 4157327684531520136}
   m_Layer: 0
-  m_Name: Text (TMP) 1
+  m_Name: PopUpTextPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

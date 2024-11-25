@@ -75,7 +75,9 @@ namespace SerapKeremGameTools._Game._PauseSystem
         /// </summary>
         private void ShowPauseMenu()
         {
+#if UNITY_EDITOR
             Debug.Log("Pause menu shown.");
+#endif
             // Implement pause menu activation here
         }
 
@@ -84,7 +86,9 @@ namespace SerapKeremGameTools._Game._PauseSystem
         /// </summary>
         private void HidePauseMenu()
         {
+#if UNITY_EDITOR
             Debug.Log("Pause menu hidden.");
+#endif
             // Implement pause menu deactivation here
         }
 
@@ -95,6 +99,17 @@ namespace SerapKeremGameTools._Game._PauseSystem
         public bool IsGamePaused()
         {
             return isPaused;
+        }
+
+        /// <summary>
+        /// Updates the game based on user input for pausing or resuming the game.
+        /// </summary>
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Escape)) // You can change the key here
+            {
+                TogglePause();
+            }
         }
     }
 }

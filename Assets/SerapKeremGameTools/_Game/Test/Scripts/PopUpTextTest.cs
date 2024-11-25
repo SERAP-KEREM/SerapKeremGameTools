@@ -13,21 +13,21 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         [Header("Pop-Up Settings")]
 
         [SerializeField, Tooltip("Reference to the PopUpTextManager that handles the pop-up creation.")]
-        private PopUpTextManager _popUpTextManager;
+        private PopUpTextManager popUpTextManager;
 
         [SerializeField, Tooltip("List of messages to choose from when creating a pop-up.")]
-        private List<string> _popUpTextOptions = new List<string>();
+        private List<string> popUpTextOptions = new List<string>();
 
         [SerializeField, Tooltip("The position at which the pop-up text will appear.")]
-        private Vector3 _popUpPosition = Vector3.zero;
+        private Vector3 popUpPosition = Vector3.zero;
 
         [SerializeField, Range(0.1f, 2f), Tooltip("Duration for which the pop-up text will remain visible.")]
-        private float _popUpDuration = 0.5f;
+        private float popUpDuration = 0.5f;
 
         [SerializeField, Tooltip("Animation type for the pop-up text.")]
-        private PopUpAnimationType _animationType = PopUpAnimationType.ScaleAndFade;
+        private PopUpAnimationType animationType = PopUpAnimationType.ScaleAndFade;
 
-        private System.Random _random = new System.Random();
+        private System.Random random = new System.Random();
 
         /// <summary>
         /// Update is called once per frame. This checks for user input and triggers the pop-up if needed.
@@ -46,13 +46,13 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         /// </summary>
         private void ShowPopUp()
         {
-            if (_popUpTextOptions.Count == 0) return;
+            if (popUpTextOptions.Count == 0) return;
 
             // Randomly choose a message from the available options
-            string message = _popUpTextOptions[_random.Next(_popUpTextOptions.Count)];
+            string message = popUpTextOptions[random.Next(popUpTextOptions.Count)];
 
             // Show the pop-up with the selected message, duration, and animation type
-            _popUpTextManager.ShowPopUpText(_popUpPosition, message, _popUpDuration, _animationType);
+            popUpTextManager.ShowPopUpText(popUpPosition, message, popUpDuration, animationType);
         }
     }
 }

@@ -63,11 +63,11 @@ namespace SerapKeremGameTools._Game._AudioSystem
             {
                 Audio newAudio = new Audio()
                 {
-                    name = clip.name,
-                    clip = clip,
-                    volume = 1f,
-                    pitch = 1f,
-                    loop = false
+                    Name = clip.name,
+                    Clip = clip,
+                    Volume = 1f,
+                    Pitch = 1f,
+                    Loop = false
                 };
                 audioClips.Add(newAudio);
             }
@@ -81,13 +81,15 @@ namespace SerapKeremGameTools._Game._AudioSystem
         public void PlayAudio(string audioName)
         {
             // Find the audio clip by name
-            Audio audio = audioClips.Find(a => a.name == audioName);
+            Audio audio = audioClips.Find(a => a.Name == audioName);
             if (audio != null)
             {
                 // Check if the audio is already playing
                 if (currentAudio == audioName)
                 {
+#if UNITY_EDITOR
                     Debug.Log($"Audio {audioName} is already playing.");
+#endif
                     return;
                 }
 
@@ -100,7 +102,9 @@ namespace SerapKeremGameTools._Game._AudioSystem
             }
             else
             {
+#if UNITY_EDITOR
                 Debug.LogWarning($"Audio not found: {audioName}");
+#endif
             }
         }
 

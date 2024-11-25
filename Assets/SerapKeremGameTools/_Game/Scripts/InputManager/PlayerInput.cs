@@ -1,49 +1,79 @@
-using System.Collections;
-using System.Collections.Generic;
+using SerapKeremGameTools._Game._Singleton;
 using UnityEngine;
 using UnityEngine.Events;
 
 namespace SerapKeremGameTools._Game._InputSystem
 {
-    public class PlayerInput : MonoBehaviour
+    /// <summary>
+    /// Handles player input, including mouse position tracking and mouse events.
+    /// </summary>
+    public class PlayerInput : MonoSingleton<PlayerInput>
     {
+        /// <summary>
+        /// Current mouse position in world coordinates.
+        /// </summary>
+        [Tooltip("Current mouse position in world coordinates.")]
         public Vector3 MousePosition { get; private set; }
+
+        /// <summary>
+        /// Event invoked when the left mouse button is pressed down.
+        /// </summary>
+        [Tooltip("Event triggered when the left mouse button is pressed down.")]
         public UnityEvent OnMouseDownEvent = new UnityEvent();
+
+        /// <summary>
+        /// Event invoked while the left mouse button is held down.
+        /// </summary>
+        [Tooltip("Event triggered while the left mouse button is held down.")]
         public UnityEvent OnMouseHeldEvent = new UnityEvent();
+
+        /// <summary>
+        /// Event invoked when the left mouse button is released.
+        /// </summary>
+        [Tooltip("Event triggered when the left mouse button is released.")]
         public UnityEvent OnMouseUpEvent = new UnityEvent();
 
+        [Tooltip("Reference to the main camera in the scene.")]
         private Camera mainCamera;
 
-        private void Awake()
+        /// <summary>
+        /// Initializes the PlayerInput singleton and assigns the main camera.
+        /// </summary>
+        protected override void Awake()
         {
-            // Main Camera referans?n? kod içinde al?yoruz
+            base.Awake();
             mainCamera = Camera.main;
             if (mainCamera == null)
             {
+#if UNITY_EDITOR
                 Debug.LogError("No Main Camera found in the scene!");
+#endif
             }
         }
 
+        /// <summary>
+        /// Updates mouse position and processes mouse input events.
+        /// </summary>
         private void Update()
         {
             if (mainCamera != null)
             {
-                // Fare pozisyonunu dünya koordinatlar?na dönü?tür
+                // Convert mouse position to world coordinates
                 MousePosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCamera.nearClipPlane));
             }
 
-            // Fare t?klama olaylar?
-            if (Input.GetMouseButtonDown(0)) // Sol fare tu?u
+            // Mouse input events
+            if (Input.GetMouseButtonDown(0)) // Left mouse button pressed
             {
                 OnMouseDownEvent.Invoke();
             }
 
-            if (Input.GetMouseButton(0)) // Fare bas?l? tutuldu?unda
+            if (Input.GetMouseButton(0)) // Left mouse button held
             {
                 OnMouseHeldEvent.Invoke();
             }
 
-            if (Input.GetMouseButtonUp(0)) // Fare b?rak?ld???nda
+            if (Input.GetMouseButtonUp(0)) // Left mouse button released
             {
                 OnMouseUpEvent.Invoke();
             }

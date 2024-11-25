@@ -5,44 +5,45 @@ namespace SerapKeremGameTools._Game._PopUpSystem
     [RequireComponent(typeof(SpriteRenderer))]
     public class PopUpIcon : MonoBehaviour
     {
+        [Tooltip("The SpriteRenderer component used to display the pop-up icon.")]
         private SpriteRenderer spriteRenderer;
 
-        // Animation properties
+        [Tooltip("The initial scale of the pop-up icon.")]
         private Vector3 initialScale;
 
         private void Awake()
         {
-            // SpriteRenderer bile?enini al ve ba?lang?ç ölçe?ini kaydet
+            // Get the SpriteRenderer component and store the initial scale
             spriteRenderer = GetComponent<SpriteRenderer>();
             initialScale = transform.localScale;
         }
 
         /// <summary>
-        /// Pop-up Sprite'? ba?lat?r.
+        /// Initializes the pop-up icon with a specific sprite and scale multiplier.
         /// </summary>
-        /// <param name="sprite">Gösterilecek Sprite.</param>
-        /// <param name="scaleMultiplier">Sprite'?n büyüklü?ünü belirleyen çarpan.</param>
+        /// <param name="sprite">The sprite to display in the pop-up icon.</param>
+        /// <param name="scaleMultiplier">Multiplier for the scale of the pop-up icon.</param>
         public void Initialize(Sprite sprite, float scaleMultiplier = 1f)
         {
             if (sprite == null)
             {
-                Debug.LogError("PopUpSpriteRenderer: Initialize edilmek istenen sprite null!");
+                Debug.LogError("PopUpSpriteRenderer: The sprite to initialize is null!");
                 return;
             }
 
-            spriteRenderer.sprite = sprite; // Sprite'? ata
-            transform.localScale = initialScale * scaleMultiplier; // Ölçe?i çarpan ile ayarla
-            spriteRenderer.color = Color.white; // Renk s?f?rla
+            spriteRenderer.sprite = sprite; // Set the sprite
+            transform.localScale = initialScale * scaleMultiplier; // Adjust the scale
+            spriteRenderer.color = Color.white; // Reset color to default
         }
 
         /// <summary>
-        /// Pop-up Sprite'? varsay?lan durumuna s?f?rlar.
+        /// Resets the properties of the pop-up icon to their default state.
         /// </summary>
         public void ResetProperties()
         {
-            transform.localScale = initialScale; // Ölçe?i s?f?rla
-            spriteRenderer.color = Color.white; // Renk s?f?rla
-            spriteRenderer.sprite = null; // Sprite'? temizle
+            transform.localScale = initialScale; // Reset scale
+            spriteRenderer.color = Color.white; // Reset color to default
+            spriteRenderer.sprite = null; // Clear the sprite
         }
     }
 }

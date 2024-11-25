@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4007296615860908091}
   - component: {fileID: 935224079830081114}
   m_Layer: 0
-  m_Name: SpriteRenderer
+  m_Name: PopUpIconPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
