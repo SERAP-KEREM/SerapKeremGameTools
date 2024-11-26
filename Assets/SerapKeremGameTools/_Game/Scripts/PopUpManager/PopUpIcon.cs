@@ -2,48 +2,90 @@ using UnityEngine;
 
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
-    [RequireComponent(typeof(SpriteRenderer))]
-    public class PopUpIcon : MonoBehaviour
+    /// <summary>
+    /// Manages a pop-up displaying an icon.
+    /// </summary>
+    public class PopUpIcon : PopUp
     {
+        [Header("Icon Settings")]
         [Tooltip("The SpriteRenderer component used to display the pop-up icon.")]
-        private SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteRenderer spriteRenderer;
 
-        [Tooltip("The initial scale of the pop-up icon.")]
-        private Vector3 initialScale;
-
-        private void Awake()
+        protected override void Awake()
         {
-            // Get the SpriteRenderer component and store the initial scale
-            spriteRenderer = GetComponent<SpriteRenderer>();
-            initialScale = transform.localScale;
+            base.Awake();
+
+            if (spriteRenderer == null)
+            {
+                spriteRenderer = GetComponent<SpriteRenderer>();
+
+                if (spriteRenderer == null)
+                {
+                    Debug.LogWarning("PopUpIcon: SpriteRenderer component is missing. Assign it in the inspector or attach it to the GameObject.", this);
+                }
+            }
         }
 
         /// <summary>
-        /// Initializes the pop-up icon with a specific sprite and scale multiplier.
+        /// Initializes the pop-up with the specified icon and optional scale.
         /// </summary>
-        /// <param name="sprite">The sprite to display in the pop-up icon.</param>
-        /// <param name="scaleMultiplier">Multiplier for the scale of the pop-up icon.</param>
-        public void Initialize(Sprite sprite, float scaleMultiplier = 1f)
+        /// <param name="args">Expected: Sprite as the first argument, and optionally a float for scale multiplier.</param>
+        public override void Initialize(params object[] args)
         {
-            if (sprite == null)
+            if (!ValidateArguments(args, out Sprite sprite, out float? optionalScale))
             {
-                Debug.LogError("PopUpSpriteRenderer: The sprite to initialize is null!");
+                Debug.LogError("PopUpIcon: Initialization failed due to invalid arguments. Expected: Sprite and optional float.", this);
                 return;
             }
 
-            spriteRenderer.sprite = sprite; // Set the sprite
-            transform.localScale = initialScale * scaleMultiplier; // Adjust the scale
-            spriteRenderer.color = Color.white; // Reset color to default
+            spriteRenderer.sprite = sprite;
+
+            if (optionalScale.HasValue)
+            {
+                transform.localScale = initialScale * optionalScale.Value;
+            }
+
+            StartCoroutine(PlayScaleAnimation());
         }
 
         /// <summary>
-        /// Resets the properties of the pop-up icon to their default state.
+        /// Resets the pop-up icon and its properties.
         /// </summary>
-        public void ResetProperties()
+        public override void ResetProperties()
         {
-            transform.localScale = initialScale; // Reset scale
-            spriteRenderer.color = Color.white; // Reset color to default
-            spriteRenderer.sprite = null; // Clear the sprite
+            base.ResetProperties();
+
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.sprite = null;
+            }
+        }
+
+        /// <summary>
+        /// Validates and extracts arguments for initializing the pop-up.
+        /// </summary>
+        /// <param name="args">The arguments passed to the Initialize method.</param>
+        /// <param name="sprite">Extracted Sprite argument.</param>
+        /// <param name="scale">Optional float scale multiplier argument.</param>
+        /// <returns>True if arguments are valid, false otherwise.</returns>
+        private bool ValidateArguments(object[] args, out Sprite sprite, out float? scale)
+        {
+            sprite = null;
+            scale = null;
+
+            if (args == null || args.Length < 1 || !(args[0] is Sprite))
+            {
+                return false;
+            }
+
+            sprite = (Sprite)args[0];
+
+            if (args.Length > 1 && args[1] is float floatArg)
+            {
+                scale = floatArg;
+            }
+
+            return true;
         }
     }
 }

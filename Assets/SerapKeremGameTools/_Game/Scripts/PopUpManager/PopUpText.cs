@@ -1,61 +1,61 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
     /// <summary>
-    /// Manages the initialization and reset of pop-up text in 3D space.
+    /// Manages a pop-up displaying text.
     /// </summary>
-    public class PopUpText : MonoBehaviour
+    public class PopUpText : PopUp
     {
+        [Header("Text Settings")]
         [Tooltip("The TextMeshPro component used to display the pop-up text.")]
         [SerializeField] private TextMeshPro textComponent;
 
-        private void Awake()
+        /// <summary>
+        /// Called during initialization. Checks if the textComponent is set.
+        /// </summary>
+        protected override void Awake()
         {
+            base.Awake();
+#if UNITY_EDITOR
+            Debug.Log($"[{nameof(PopUpText)}] Awake initialized.");
+#endif
             if (textComponent == null)
             {
                 textComponent = GetComponent<TextMeshPro>();
-                if (textComponent == null)
-                {
-                    Debug.LogError("TextMeshPro component is missing on the GameObject!", this);
-                }
+#if UNITY_EDITOR
+                Debug.LogWarning("PopUpText: TextMeshPro component is missing, attempting to fetch from the GameObject.", this);
+#endif
             }
         }
 
         /// <summary>
-        /// Initializes the pop-up text with the provided content.
+        /// Initializes the pop-up with the specified text.
         /// </summary>
-        /// <param name="text">The string to display in the pop-up.</param>
-        public void Initialize(string text)
+        /// <param name="args">Expected: a single string argument for the text.</param>
+        public override void Initialize(params object[] args)
         {
-            if (textComponent != null)
+            if (args.Length == 0 || !(args[0] is string text))
             {
-                textComponent.text = text;
+                Debug.LogError("PopUpText: Invalid arguments for initialization.", this);
+                return;
             }
-            else
-            {
-                Debug.LogError("TextMeshPro component is not assigned in the PopUpText script.");
-            }
+
+            textComponent.text = text;
+            StartCoroutine(PlayScaleAnimation());
         }
 
         /// <summary>
-        /// Resets the properties of the pop-up text, such as clearing the text and resetting the transform.
+        /// Resets the pop-up text and its properties.
         /// </summary>
-        public void ResetProperties()
+        public override void ResetProperties()
         {
+            base.ResetProperties();
             if (textComponent != null)
             {
-                textComponent.text = string.Empty; // Clears the pop-up text
+                textComponent.text = string.Empty;
             }
-            else
-            {
-                Debug.LogWarning("TextMeshPro component is missing when attempting to reset properties.", this);
-            }
-
-            // Resets position and scale to their default values
-            transform.position = Vector3.zero;
-            transform.localScale = Vector3.one;
         }
     }
 }

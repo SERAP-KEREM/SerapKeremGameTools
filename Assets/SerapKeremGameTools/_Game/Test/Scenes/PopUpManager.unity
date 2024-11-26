@@ -245,13 +245,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a49c18ea63c74454390a12d30f726731, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popUpTextPrefab: {fileID: 4157327684531520136, guid: 218c46fe02eeb834f9bbec52f5af1535, type: 3}
   poolSize: 10
-  hideDelay: 1
   animationDuration: 0.5
+  hideDelay: 1
   bounceHeight: 2
   bounceCount: 3
   slideOffset: {x: 0, y: 2, z: 0}
+  popUpTextPrefab: {fileID: 4157327684531520136, guid: 218c46fe02eeb834f9bbec52f5af1535, type: 3}
   popUpTextScale: {x: 1, y: 1, z: 1}
 --- !u!4 &910309732
 Transform:
@@ -380,13 +380,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea9836ead66fc3847b2685439d2f69a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popUpIconPrefab: {fileID: 935224079830081114, guid: 43bd14aaa8e85794a9d6729a1c8bfc03, type: 3}
   poolSize: 10
-  hideDelay: 1
   animationDuration: 0.5
+  hideDelay: 1
   bounceHeight: 1
   bounceCount: 3
   slideOffset: {x: 1, y: 1, z: 0}
+  popUpIconPrefab: {fileID: 935224079830081114, guid: 43bd14aaa8e85794a9d6729a1c8bfc03, type: 3}
 --- !u!4 &1221430687
 Transform:
   m_ObjectHideFlags: 0
@@ -431,7 +431,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bf53e915a50b0340838f4d949ed82ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _popUpTextManager: {fileID: 910309731}
   _popUpTextOptions:
   - deneme
   _popUpPosition: {x: 0, y: 3, z: 0}
@@ -461,7 +460,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2099053439}
-  - component: {fileID: 2099053438}
+  - component: {fileID: 2099053440}
   m_Layer: 0
   m_Name: PopUpSpriteTest
   m_TagString: Untagged
@@ -469,33 +468,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &2099053438
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2099053437}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da1e9f9cea631e7488c0b99b06d3f2f7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  popUpIconManager: {fileID: 1221430686}
-  popUpSpriteOptions:
-  - {fileID: 21300000, guid: edc40e47dfae4774585fcb2a5c85136a, type: 3}
-  - {fileID: 21300000, guid: a85ea049230eea445b9c5fae3dc3de6d, type: 3}
-  - {fileID: 21300000, guid: 6e6b912d38d1f8748961d61f31fddde5, type: 3}
-  - {fileID: 21300000, guid: ca3357bf98100cf4c88c0dfd6e9c2ee4, type: 3}
-  - {fileID: 21300000, guid: 4355c391ac68c45458647c5e480ccac3, type: 3}
-  - {fileID: 21300000, guid: edcf902d92ebef247b8c872e49d9730a, type: 3}
-  - {fileID: 21300000, guid: e131d3f5ff927e6479ae65d64b422d0e, type: 3}
-  - {fileID: 21300000, guid: cab0a149cfda432418ab69551cf3a982, type: 3}
-  - {fileID: 21300000, guid: 8a8e4fbd7979d1f40b5707cf9c68970e, type: 3}
-  - {fileID: 21300000, guid: 901c082cc658d3f49bfe60e6c9a41987, type: 3}
-  popUpPosition: {x: 0, y: 0, z: 0}
-  popUpDuration: 0.5
-  animationType: 0
 --- !u!4 &2099053439
 Transform:
   m_ObjectHideFlags: 0
@@ -511,6 +483,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2099053440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2099053437}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f1c8ffcf1da75942a528926ac8431b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  popUpSpriteOptions:
+  - {fileID: 21300000, guid: edc40e47dfae4774585fcb2a5c85136a, type: 3}
+  popUpPosition: {x: 0, y: 0, z: 0}
+  popUpDuration: 2
+  animationType: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
