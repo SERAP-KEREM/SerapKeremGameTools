@@ -33,6 +33,18 @@ namespace SerapKeremGameTools._Game._InputSystem
         [Tooltip("Event triggered when the left mouse button is released.")]
         public UnityEvent OnMouseUpEvent = new UnityEvent();
 
+        /// <summary>
+        /// Event invoked when mouse position changes.
+        /// </summary>
+        [Tooltip("Event triggered when mouse position changes.")]
+        public UnityEvent<Vector3> OnMousePositionInput = new UnityEvent<Vector3>();
+
+        /// <summary>
+        /// Movement input (Vector2) based on horizontal and vertical axes.
+        /// </summary>
+        [Tooltip("Current movement input (WASD or arrow keys).")]
+        public Vector2 MovementInput { get; private set; }
+
         [Tooltip("Reference to the main camera in the scene.")]
         private Camera mainCamera;
 
@@ -50,17 +62,26 @@ namespace SerapKeremGameTools._Game._InputSystem
 #endif
             }
         }
-
         /// <summary>
-        /// Updates mouse position and processes mouse input events.
+        /// Updates input states, including mouse position and movement input.
         /// </summary>
         private void Update()
         {
+            // Update mouse position
             if (mainCamera != null)
             {
-                // Convert mouse position to world coordinates
+                Vector3 previousMousePosition = MousePosition; // Store previous position
                 MousePosition = mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, mainCamera.nearClipPlane));
+
+                // Trigger event if mouse position has changed
+                if (MousePosition != previousMousePosition)
+                {
+                    OnMousePositionInput.Invoke(MousePosition);
+                }
             }
+
+            // Update movement input
+            MovementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
             // Mouse input events
             if (Input.GetMouseButtonDown(0)) // Left mouse button pressed
@@ -77,6 +98,16 @@ namespace SerapKeremGameTools._Game._InputSystem
             {
                 OnMouseUpEvent.Invoke();
             }
+        }
+
+        /// <summary>
+        /// Returns the movement input for the player (WASD or arrow keys).
+        /// </summary>
+        public Vector2 GetMovementInput()
+        {
+            float moveX = Input.GetAxisRaw("Horizontal");  
+            float moveY = Input.GetAxisRaw("Vertical");   
+            return new Vector2(moveX, moveY);
         }
     }
 }
