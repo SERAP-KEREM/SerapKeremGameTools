@@ -64,6 +64,26 @@ namespace SerapKeremGameTools._Game._TopDownCharacterSystem
 
         #endregion
 
+        #region Animation Parameters
+
+        [Header("Animation Parameters")]
+        [Tooltip("Animator parameter name for movement speed.")]
+        public string SpeedParameter = "Speed";
+
+        [Tooltip("Animator parameter name for hurt animation.")]
+        public string HurtParameter = "IsHurt";
+
+        [Tooltip("Animator parameter name for death animation.")]
+        public string DeadParameter = "IsDead";
+
+        [Tooltip("Animator parameter name for attack animation.")]
+        public string AttackParameter = "IsAttacking";
+
+        [Tooltip("Animator parameter name for victory animation.")]
+        public string WinParameter = "IsWin";
+
+        #endregion
+
         #region Internal State
 
         [HideInInspector] public bool IsDead = false;
@@ -119,3 +139,4 @@ namespace SerapKeremGameTools._Game._TopDownCharacterSystem
         }
     }
 }
+           
