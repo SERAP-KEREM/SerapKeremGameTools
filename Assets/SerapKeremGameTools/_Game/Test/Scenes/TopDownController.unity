@@ -469,18 +469,10 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: e2b1e313d8ba0cd439b6bb0ae767b5ba, type: 3}
       propertyPath: m_Controller
       value: 
-      objectReference: {fileID: 9100000, guid: c2d721d9161757e46aeae687d3bdc512, type: 2}
+      objectReference: {fileID: 9100000, guid: 8d72405257694fa4ab9d8e9ddd38d2ce, type: 2}
     - target: {fileID: 5866666021909216657, guid: e2b1e313d8ba0cd439b6bb0ae767b5ba, type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:LeftFoot'\n\tTransform
-        'mixamorig:LeftHandThumb2'\n\tTransform 'mixamorig:LeftHandIndex1'\n\tTransform
-        'mixamorig:LeftHandPinky2'\n\tTransform 'mixamorig:RightHandRing2'\n\tTransform
-        'mixamorig:Spine1'\n\tTransform 'mixamorig:LeftToeBase'\n\tTransform 'mixamorig:LeftHandThumb3'\n\tTransform
-        'mixamorig:RightArm'\n\tand more ...\n\tFrom animation clip 'Walking (1)'\n\tFrom
-        animation clip 'Pain Gesture'\n\tFrom animation clip 'Standing Death Left
-        01'"
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -495,9 +487,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e2b1e313d8ba0cd439b6bb0ae767b5ba, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1747914651}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e2b1e313d8ba0cd439b6bb0ae767b5ba, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1747914654}
   m_SourcePrefab: {fileID: 100100000, guid: e2b1e313d8ba0cd439b6bb0ae767b5ba, type: 3}
 --- !u!1 &1747914648 stripped
 GameObject:
@@ -565,19 +554,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1747914654
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1747914648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: abfca0e09d38b154b962d3c25cca5d83, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _topDownCharacterAnimator: {fileID: 1747914652}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
