@@ -411,7 +411,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1378761339}
-  - component: {fileID: 1378761338}
+  - component: {fileID: 1378761340}
   m_Layer: 0
   m_Name: PopUpTextTest
   m_TagString: Untagged
@@ -419,23 +419,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1378761338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1378761337}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7bf53e915a50b0340838f4d949ed82ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _popUpTextOptions:
-  - deneme
-  _popUpPosition: {x: 0, y: 3, z: 0}
-  _popUpDuration: 0.5
-  _animationType: 0
 --- !u!4 &1378761339
 Transform:
   m_ObjectHideFlags: 0
@@ -451,6 +434,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1378761340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378761337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc21c70f9c0b42c4297f674732c01414, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _popUpTextOptions:
+  - deneme
+  _popUpPosition: {x: 0, y: 0, z: 0}
+  _popUpDuration: 0.5
+  _animationType: 0
 --- !u!1 &2099053437
 GameObject:
   m_ObjectHideFlags: 0
@@ -492,13 +492,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2099053437}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f1c8ffcf1da75942a528926ac8431b2, type: 3}
+  m_Script: {fileID: 11500000, guid: da1e9f9cea631e7488c0b99b06d3f2f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   popUpSpriteOptions:
   - {fileID: 21300000, guid: edc40e47dfae4774585fcb2a5c85136a, type: 3}
   popUpPosition: {x: 0, y: 0, z: 0}
-  popUpDuration: 2
+  popUpDuration: 0.5
   animationType: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
