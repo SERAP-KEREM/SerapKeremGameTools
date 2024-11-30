@@ -1,6 +1,7 @@
 using UnityEngine;
 using SerapKeremGameTools._Game._Singleton;
 using System.Collections;
+using SerapKeremGameTools._Game._objectPool;
 
 namespace SerapKeremGameTools._Game._PopUpSystem
 {
@@ -11,7 +12,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
     /// </summary>
     /// <typeparam name="T">The type of the pop-up object (e.g., text, icon).</typeparam>
     public abstract class PopUpManager<T, TManager> : MonoSingleton<TManager>
-        where T : MonoBehaviour
+        where T : PopUp
         where TManager : PopUpManager<T, TManager>
     {
         [Header("Pool Settings")]
@@ -34,6 +35,8 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         [SerializeField, Tooltip("Offset for slide animations.")]
         protected Vector3 slideOffset = new Vector3(0, 2, 0);
 
+        protected ObjectPool<PopUp> popUpPool;
+
         /// <summary>
         /// Handles common initialization logic.
         /// </summary>
@@ -47,9 +50,14 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         /// </summary>
         protected abstract IEnumerator HandleAnimation(T popUpObject, float duration, PopUpAnimationType animationType);
 
+
         /// <summary>
-        /// Method to return the pop-up object to its pool after its use.
+        /// Returns the pop-up icon to the pool after a specified delay.
         /// </summary>
-        protected abstract IEnumerator ReturnPopUpObjectAfterDelay(T popUpObject, float delay);
+        protected virtual IEnumerator ReturnPopUpObjectAfterDelay(PopUp popUp, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            popUpPool.ReturnObject(popUp);
+        }
     }
 }

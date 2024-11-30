@@ -13,7 +13,6 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         [SerializeField, Tooltip("Prefab for the pop-up icon.")]
         private PopUpIcon popUpIconPrefab;
 
-        private ObjectPool<PopUpIcon> popUpIconPool;
 
         /// <summary>
         /// Initialization logic for the icon manager.
@@ -21,7 +20,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         protected override void Awake()
         {
             base.Awake();
-            popUpIconPool = new ObjectPool<PopUpIcon>(popUpIconPrefab, poolSize, transform);
+            popUpPool = new ObjectPool<PopUp>(popUpIconPrefab, poolSize, transform);
         }
 
         /// <summary>
@@ -33,7 +32,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         /// <param name="animationType">Type of animation to use.</param>
         public void ShowPopUpIcon(Vector3 position, Sprite sprite, float customDuration, PopUpAnimationType animationType)
         {
-            PopUpIcon popUpIcon = popUpIconPool.GetObject();
+            PopUpIcon popUpIcon = popUpPool.GetObject() as PopUpIcon;
             popUpIcon.transform.position = position;
             popUpIcon.Initialize(sprite);
 
@@ -132,15 +131,6 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             }
 
             popUpIcon.transform.position = startPosition;
-        }
-
-        /// <summary>
-        /// Returns the pop-up icon to the pool after a specified delay.
-        /// </summary>
-        protected override IEnumerator ReturnPopUpObjectAfterDelay(PopUpIcon popUpIcon, float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            popUpIconPool.ReturnObject(popUpIcon);
         }
     }
 }

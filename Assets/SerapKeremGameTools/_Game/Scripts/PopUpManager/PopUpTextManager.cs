@@ -17,12 +17,10 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         [SerializeField, Tooltip("Scale applied to the pop-up text.")]
         private Vector3 popUpTextScale = Vector3.one;
 
-        private ObjectPool<PopUpText> popUpTextPool;
-
         protected override void Awake()
         {
             base.Awake();
-            popUpTextPool = new ObjectPool<PopUpText>(popUpTextPrefab, poolSize, transform);
+            popUpPool = new ObjectPool<PopUp>(popUpTextPrefab, poolSize, transform);
         }
 
         /// <summary>
@@ -30,7 +28,7 @@ namespace SerapKeremGameTools._Game._PopUpSystem
         /// </summary>
         public void ShowPopUpText(Vector3 position, string text, float customDuration, PopUpAnimationType animationType)
         {
-            PopUpText popUpText = popUpTextPool.GetObject();
+            PopUpText popUpText = popUpPool.GetObject() as PopUpText;
             popUpText.transform.position = position;
             popUpText.Initialize(text);
             popUpText.transform.localScale = popUpTextScale;
@@ -130,12 +128,6 @@ namespace SerapKeremGameTools._Game._PopUpSystem
             }
 
             popUpText.transform.position = startPosition;
-        }
-
-        protected override IEnumerator ReturnPopUpObjectAfterDelay(PopUpText popUpText, float delay)
-        {
-            yield return new WaitForSeconds(delay);
-            popUpTextPool.ReturnObject(popUpText);
         }
     }
 }
