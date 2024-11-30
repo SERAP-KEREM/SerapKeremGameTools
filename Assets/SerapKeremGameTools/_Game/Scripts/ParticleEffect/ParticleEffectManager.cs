@@ -7,25 +7,34 @@ namespace SerapKeremGameTools._Game._ParticleEffectSystem
 {
     public class ParticleEffectManager : MonoSingleton<ParticleEffectManager>
     {
-        // List of all particle effects data
+        [Header("Particle Effect Configurations")]
+        /// <summary>
+        /// List of all particle effects data.
+        /// </summary>
+        [Tooltip("List of particle effect data configurations.")]
         [SerializeField]
         private List<ParticleEffectData> particleEffectDataList = new List<ParticleEffectData>();
 
-        // Dictionary to store pools for each particle effect
+        [Header("Particle Effect Pools")]
+        /// <summary>
+        /// Dictionary to store particle system pools for each particle effect.
+        /// </summary>
         private Dictionary<string, Queue<ParticleSystem>> particlePools = new Dictionary<string, Queue<ParticleSystem>>();
 
-        // Dictionary to store the parent GameObject for each particle effect group
+        [Header("Particle Effect Parents")]
+        /// <summary>
+        /// Dictionary to store parent GameObjects for each particle effect group.
+        /// </summary>
         private Dictionary<string, GameObject> particleEffectParents = new Dictionary<string, GameObject>();
 
         protected override void Awake()
         {
-            base.Awake();  // MonoSingleton'dan gelen Awake metodunu ça??r?r
-            InitializeParticlePools(); // Particle havuzlar?n? ba?lat?r
+            base.Awake();
+            InitializeParticlePools();
         }
 
         /// <summary>
-        /// Initializes the particle pools using the particle effect data.
-        /// This method initializes particle pools for each defined particle effect.
+        /// Initializes particle system pools for each particle effect defined in the data list.
         /// </summary>
         private void InitializeParticlePools()
         {
@@ -33,75 +42,89 @@ namespace SerapKeremGameTools._Game._ParticleEffectSystem
             {
                 Queue<ParticleSystem> pool = new Queue<ParticleSystem>();
 
-                // Create a parent GameObject for this particle effect group
+                // Create a parent GameObject for grouping particles
                 GameObject effectParent = new GameObject(data.ParticleName);
-                effectParent.transform.SetParent(transform); // Set ParticleEffectManager as the parent
+                effectParent.transform.SetParent(transform);
 
-                // Store this parent in the dictionary
                 particleEffectParents[data.ParticleName] = effectParent;
 
-                // Create the pool for each particle effect
+                // Populate the pool
                 for (int i = 0; i < data.ParticleCount; i++)
                 {
                     var particlePrefab = data.ParticleSystem;
 
                     if (particlePrefab != null)
                     {
-                        var instance = Instantiate(particlePrefab, effectParent.transform); // Instantiate under the group parent
-                        instance.gameObject.SetActive(false);  // Deactivate initially
-                        pool.Enqueue(instance);  // Add to pool
+                        var instance = Instantiate(particlePrefab, effectParent.transform);
+                        instance.gameObject.SetActive(false);
+                        pool.Enqueue(instance);
                     }
                     else
                     {
+#if UNITY_EDITOR
                         Debug.LogError($"Particle prefab not found for: {data.ParticleName}");
+#endif
                     }
                 }
 
-                particlePools[data.ParticleName] = pool;  // Add pool to dictionary
+                particlePools[data.ParticleName] = pool;
             }
         }
 
         /// <summary>
-        /// Plays a particle effect at the given position and rotation.
+        /// Plays a particle effect at the specified position and rotation.
         /// </summary>
-        /// <param name="particleName">The name of the particle effect to play.</param>
-        /// <param name="position">The position where the particle effect will be played.</param>
-        /// <param name="rotation">The rotation of the particle effect.</param>
+        /// <param name="particleName">Name of the particle effect to play.</param>
+        /// <param name="position">Position where the effect will appear.</param>
+        /// <param name="rotation">Rotation of the particle effect.</param>
         public void PlayParticle(string particleName, Vector3 position, Quaternion rotation)
         {
             if (particlePools.TryGetValue(particleName, out var pool) && pool.Count > 0)
             {
-                var particle = pool.Dequeue();  // Get a particle from the pool
+                var particle = pool.Dequeue();
                 particle.transform.position = position;
                 particle.transform.rotation = rotation;
 
-                particle.gameObject.SetActive(true);  // Activate particle
+                particle.gameObject.SetActive(true);
                 particle.Play();
 
-                // Return the particle to the pool after it's done playing
                 StartCoroutine(ReturnToPoolAfterDuration(particle, particleName));
             }
             else
             {
+#if UNITY_EDITOR
                 Debug.LogWarning($"No available particle in the pool for: {particleName}");
+#endif
             }
         }
 
         /// <summary>
-        /// Returns the particle system to the pool after it finishes playing.
+        /// Stops all currently active particle effects.
         /// </summary>
-        /// <param name="particleSystem">The particle system to return.</param>
-        /// <param name="effectName">The name of the effect being returned.</param>
-        public void ReturnEffectToPool(ParticleSystem particleSystem, string effectName)
+        public void StopAllEffects()
         {
-            ReturnToPoolAfterDuration(particleSystem, effectName); // Call the restricted method internally
+            ParticleSystem[] allParticles = GetComponentsInChildren<ParticleSystem>();
+            foreach (var particle in allParticles)
+            {
+                particle.Stop();
+            }
         }
 
         /// <summary>
-        /// Returns the particle system to the pool after it finishes playing.
+        /// Returns a particle effect to its pool after completion.
         /// </summary>
-        /// <param name="particle">The particle system to return to the pool.</param>
-        /// <param name="particleName">The name of the particle effect.</param>
+        /// <param name="particleSystem">The particle system to return.</param>
+        /// <param name="effectName">Name of the particle effect.</param>
+        public void ReturnEffectToPool(ParticleSystem particleSystem, string effectName)
+        {
+            StartCoroutine(ReturnToPoolAfterDuration(particleSystem, effectName));
+        }
+
+        /// <summary>
+        /// Coroutine to return a particle effect to the pool after its duration ends.
+        /// </summary>
+        /// <param name="particle">The particle system to return.</param>
+        /// <param name="particleName">Name of the particle effect.</param>
         private IEnumerator ReturnToPoolAfterDuration(ParticleSystem particle, string particleName)
         {
             yield return new WaitForSeconds(particle.main.duration);
@@ -111,11 +134,13 @@ namespace SerapKeremGameTools._Game._ParticleEffectSystem
 
             if (particlePools.ContainsKey(particleName))
             {
-                particlePools[particleName].Enqueue(particle);  // Return to pool
+                particlePools[particleName].Enqueue(particle);
             }
             else
             {
+#if UNITY_EDITOR
                 Debug.LogError($"No pool found for particle: {particleName}");
+#endif
             }
         }
     }
