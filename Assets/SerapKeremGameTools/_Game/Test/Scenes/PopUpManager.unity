@@ -250,7 +250,7 @@ MonoBehaviour:
   hideDelay: 1
   bounceHeight: 2
   bounceCount: 3
-  slideOffset: {x: 0, y: 2, z: 0}
+  slideOffset: {x: 0, y: 1, z: 0}
   popUpTextPrefab: {fileID: 4157327684531520136, guid: 218c46fe02eeb834f9bbec52f5af1535, type: 3}
   popUpTextScale: {x: 1, y: 1, z: 1}
 --- !u!4 &910309732
@@ -362,7 +362,7 @@ GameObject:
   - component: {fileID: 1221430687}
   - component: {fileID: 1221430686}
   m_Layer: 0
-  m_Name: PopUpSpriteRendererManager
+  m_Name: PopUpIconManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -448,7 +448,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _popUpTextOptions:
   - deneme
-  _popUpPosition: {x: 0, y: 0, z: 0}
+  _popUpPosition: {x: 0, y: 3, z: 0}
   _popUpDuration: 0.5
   _animationType: 0
 --- !u!1 &2099053437
@@ -462,7 +462,7 @@ GameObject:
   - component: {fileID: 2099053439}
   - component: {fileID: 2099053440}
   m_Layer: 0
-  m_Name: PopUpSpriteTest
+  m_Name: PopUpIconTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -497,6 +497,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   popUpSpriteOptions:
   - {fileID: 21300000, guid: edc40e47dfae4774585fcb2a5c85136a, type: 3}
+  - {fileID: 21300000, guid: edc40e47dfae4774585fcb2a5c85136a, type: 3}
+  - {fileID: 21300000, guid: a85ea049230eea445b9c5fae3dc3de6d, type: 3}
+  - {fileID: 21300000, guid: 6e6b912d38d1f8748961d61f31fddde5, type: 3}
+  - {fileID: 21300000, guid: ca3357bf98100cf4c88c0dfd6e9c2ee4, type: 3}
+  - {fileID: 21300000, guid: 4355c391ac68c45458647c5e480ccac3, type: 3}
+  - {fileID: 21300000, guid: edcf902d92ebef247b8c872e49d9730a, type: 3}
+  - {fileID: 21300000, guid: e131d3f5ff927e6479ae65d64b422d0e, type: 3}
+  - {fileID: 21300000, guid: cab0a149cfda432418ab69551cf3a982, type: 3}
+  - {fileID: 21300000, guid: 8a8e4fbd7979d1f40b5707cf9c68970e, type: 3}
+  - {fileID: 21300000, guid: 901c082cc658d3f49bfe60e6c9a41987, type: 3}
   popUpPosition: {x: 0, y: 0, z: 0}
   popUpDuration: 0.5
   animationType: 0

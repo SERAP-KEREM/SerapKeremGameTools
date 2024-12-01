@@ -170,10 +170,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1920, y: 1080}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -255,13 +255,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   particleEffectDataList:
-  - _particleName: Explosion
-    _particleCount: 10
-    _particleSystemList:
+  - particleName: Explosion
+    particleCount: 10
+    particleSystemList:
     - {fileID: 8804159012106707001, guid: 24c6e70d439525942add87f820c9165c, type: 3}
-  - _particleName: FireBall
-    _particleCount: 10
-    _particleSystemList:
+  - particleName: FireBall
+    particleCount: 10
+    particleSystemList:
     - {fileID: 5502662067771933757, guid: 155db1d770a53114d95da0fda8481445, type: 3}
 --- !u!4 &412258364
 Transform:
@@ -453,7 +453,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -409.58783, y: 179}
+  m_AnchoredPosition: {x: -666, y: 179}
   m_SizeDelta: {x: 283.1251, y: 159.9397}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &946691518
@@ -670,7 +670,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -409.58783, y: -69}
+  m_AnchoredPosition: {x: -666, y: -69}
   m_SizeDelta: {x: 283.1251, y: 159.9397}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1308514164
