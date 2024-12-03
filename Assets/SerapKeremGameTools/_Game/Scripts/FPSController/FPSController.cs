@@ -12,6 +12,8 @@ public class FPSController : MonoBehaviour
     [SerializeField] private bool canSprint = true;
     [SerializeField] private bool canJump = true;
     [SerializeField] private bool canCrouch = true;
+    [SerializeField] private bool canUseHeadbob = true;
+    [SerializeField] private bool WillSlideOnSlopes = true;
 
     [Header("Controls")]
     [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
@@ -22,6 +24,7 @@ public class FPSController : MonoBehaviour
     [SerializeField] private float walkSpeed = 3.0f;
     [SerializeField] private float sprintSpeed = 6.0f;
     [SerializeField] private float crouchSpeed = 1.5f;
+    [SerializeField] private float slopeSpeed = 8f;
 
     [Header("Look Parameters")]
     [SerializeField, Range(1, 10)] private float lookSpeedX = 2.0f;
@@ -42,6 +45,37 @@ public class FPSController : MonoBehaviour
     private bool isCrouching;
     private bool duringCrouchAnimation;
 
+    [Header("Headbob Parameters")]
+    [SerializeField] private float walkBobSpeed = 14f;
+    [SerializeField] private float walkBobAmount = 0.05f;
+    [SerializeField] private float sprintBobSpeed = 18f;
+    [SerializeField] private float sprintBobAmount = 0.11f;
+    [SerializeField] private float crouchBobSpeed = 8f;
+    [SerializeField] private float crouchBobAmount = 0.025f;
+    private float defaultYPos = 0;
+    private float timer;
+
+
+    // SLIDING PARAMETERS
+    private Vector3 hitPointNormal;
+    private bool IsSliding
+    {
+        get
+        {
+            Debug.DrawRay(transform.position, Vector3.down,Color.red);
+            if (characterController.isGrounded && Physics.Raycast(transform.position, Vector3.down, out RaycastHit slopeHit, 2f))
+            {
+                hitPointNormal = slopeHit.normal;
+
+                return Vector3.Angle(hitPointNormal, Vector3.up) > characterController.slopeLimit;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+
     private Camera playerCamera;
     private CharacterController characterController;
 
@@ -53,6 +87,7 @@ public class FPSController : MonoBehaviour
     {
         playerCamera = GetComponentInChildren<Camera>();
         characterController = GetComponent<CharacterController>();
+        defaultYPos = playerCamera.transform.localPosition.y;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -69,6 +104,9 @@ public class FPSController : MonoBehaviour
 
             if (canCrouch)
                 HandleCrouch();
+
+            if (canUseHeadbob)
+                HandleHeadbob();
 
             ApplyFinalMovements();
         }
@@ -103,16 +141,31 @@ public class FPSController : MonoBehaviour
             StartCoroutine(CrouchStand());
     }
 
+    private void HandleHeadbob()
+    {
+        if (!characterController.isGrounded)
+            return;
+        if (Mathf.Abs(moveDirection.x) > 0.1f || Mathf.Abs(moveDirection.z) > 0.1f)
+        {
+
+            timer += Time.deltaTime * (isCrouching ? crouchBobSpeed : IsSprinting ? sprintBobSpeed : walkBobSpeed);
+            playerCamera.transform.localPosition = new Vector3(playerCamera.transform.localPosition.x,
+            defaultYPos + Mathf.Sin(timer) * (isCrouching ? crouchBobAmount : IsSprinting ? sprintBobAmount : walkBobAmount),
+            playerCamera.transform.localPosition.z);
+        }
+    }
     private void ApplyFinalMovements()
     {
         if (!characterController.isGrounded)
             moveDirection.y -= gravity * Time.deltaTime;
 
+        if(WillSlideOnSlopes && IsSliding)
+            moveDirection+=new Vector3(hitPointNormal.x,-hitPointNormal.y,hitPointNormal.z)*slopeSpeed;
         characterController.Move(moveDirection * Time.deltaTime);
     }
     private IEnumerator CrouchStand()
     {
-        if(isCrouching && Physics.Raycast(playerCamera.transform.position,Vector3.up,1f))
+        if (isCrouching && Physics.Raycast(playerCamera.transform.position, Vector3.up, 1f))
             yield break;
 
         duringCrouchAnimation = true;
