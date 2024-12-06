@@ -59,7 +59,7 @@ The **TimeManager** controls the in-game time and can pause, resume, and handle 
 ---
 
 ### **PopUpManager.cs**
-The **Pop-Up System** helps you manage in-game UI pop-ups like text and icons, with customizable animations and memory-efficient pooling.
+The **Pop-Up System** Manage pop-up texts and icons efficiently with object pooling for memory optimization.
 
 - The **PopUp** class manages common functions like starting animations and resetting states.
 - Includes **PopUpText** and **PopUpIcon** for handling specific pop-up types.
