@@ -183,7 +183,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: f4318641952f4444dbf427589d905b1b, type: 2}
+  - {fileID: 2100000, guid: ffdefc2c145dd1e4da521d300cf6f67f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -483,19 +483,11 @@ PrefabInstance:
       addedObject: {fileID: 1747914653}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e2b1e313d8ba0cd439b6bb0ae767b5ba, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1747914652}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e2b1e313d8ba0cd439b6bb0ae767b5ba, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 1747914651}
   m_SourcePrefab: {fileID: 100100000, guid: e2b1e313d8ba0cd439b6bb0ae767b5ba, type: 3}
 --- !u!1 &1747914648 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: e2b1e313d8ba0cd439b6bb0ae767b5ba, type: 3}
-  m_PrefabInstance: {fileID: 781759561}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &1747914649 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: e2b1e313d8ba0cd439b6bb0ae767b5ba, type: 3}
   m_PrefabInstance: {fileID: 781759561}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &1747914651
@@ -513,21 +505,6 @@ MonoBehaviour:
   _characterController: {fileID: 1747914653}
   _characterConfig: {fileID: 11400000, guid: 1cc87080caec8c447a37ebdee53e5f77, type: 2}
   _customGravity: -9.81
---- !u!114 &1747914652
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1747914648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36754ec0c33015542aa0c07fe55ca7da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _animator: {fileID: 1747914649}
-  _characterController: {fileID: 1747914651}
-  _characterConfig: {fileID: 11400000, guid: 1cc87080caec8c447a37ebdee53e5f77, type: 2}
 --- !u!143 &1747914653
 CharacterController:
   m_ObjectHideFlags: 0
@@ -547,13 +524,13 @@ CharacterController:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Height: 2
-  m_Radius: 0.5
+  m_Height: 1.8
+  m_Radius: 0.3
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.9, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

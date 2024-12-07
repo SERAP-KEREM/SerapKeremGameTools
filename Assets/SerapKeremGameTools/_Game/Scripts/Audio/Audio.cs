@@ -12,9 +12,9 @@ namespace SerapKeremGameTools._Game._AudioSystem
         [SerializeField]
         private string name;
 
-        [Tooltip("The audio clip to be played.")]
+        [Tooltip("The random audio clips to be played. Multiple clips can be provided for variety.")]
         [SerializeField]
-        private AudioClip clip;
+        private AudioClip[] clips; // Array of clips for random selection
 
         [Tooltip("The volume of the audio. Ranges from 0 (silent) to 1 (maximum).")]
         [SerializeField, Range(0f, 1f)]
@@ -38,12 +38,12 @@ namespace SerapKeremGameTools._Game._AudioSystem
         }
 
         /// <summary>
-        /// Gets or sets the audio clip.
+        /// Gets or sets the array of audio clips.
         /// </summary>
-        public AudioClip Clip
+        public AudioClip[] Clips
         {
-            get => clip;
-            set => clip = value;
+            get => clips;
+            set => clips = value;
         }
 
         /// <summary>

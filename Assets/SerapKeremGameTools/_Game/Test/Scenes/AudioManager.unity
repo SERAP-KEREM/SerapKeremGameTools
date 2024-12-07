@@ -453,7 +453,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioClips:
   - name: BackgroundSound
-    clip: {fileID: 8300000, guid: 28db36be781bf5343b221e4e6943ce80, type: 3}
+    clips:
+    - {fileID: 8300000, guid: 28db36be781bf5343b221e4e6943ce80, type: 3}
     volume: 0.4
     pitch: 3
     loop: 1
