@@ -2,12 +2,12 @@ using UnityEngine;
 using System.Collections.Generic;
 using SerapKeremGameTools._Game._objectPool;
 using SerapKeremGameTools._Game._Singleton;
+using System.Collections;
 
 namespace SerapKeremGameTools._Game._AudioSystem
 {
     /// <summary>
     /// Manages audio playback, pooling for AudioPlayers, and provides playback controls.
-    /// This class ensures that audio is efficiently managed and reused in the game.
     /// </summary>
     public class AudioManager : MonoSingleton<AudioManager>
     {
@@ -64,7 +64,7 @@ namespace SerapKeremGameTools._Game._AudioSystem
                 Audio newAudio = new Audio()
                 {
                     Name = clip.name,
-                    Clip = clip,
+                    Clips = new AudioClip[] { clip }, // Single clip in array (you can add more here)
                     Volume = 1f,
                     Pitch = 1f,
                     Loop = false
@@ -75,7 +75,6 @@ namespace SerapKeremGameTools._Game._AudioSystem
 
         /// <summary>
         /// Plays an audio clip by its name from the audioClips list.
-        /// If the audio is already playing, it won't play again.
         /// </summary>
         /// <param name="audioName">The name of the audio clip to play.</param>
         public void PlayAudio(string audioName)
@@ -87,30 +86,57 @@ namespace SerapKeremGameTools._Game._AudioSystem
                 // Check if the audio is already playing
                 if (currentAudio == audioName)
                 {
-#if UNITY_EDITOR
                     Debug.Log($"Audio {audioName} is already playing.");
-#endif
                     return;
                 }
 
+                // Choose random clip if there are multiple clips
+                AudioClip clipToPlay = audio.Clips.Length > 1 ? audio.Clips[Random.Range(0, audio.Clips.Length)] : audio.Clips[0];
+
                 // Get an AudioPlayer from the pool and play the audio
                 AudioPlayer audioPlayer = audioPlayerPool.GetObject();
-                audioPlayer.PlayAudio(audio);
+                audioPlayer.PlayOneShot(clipToPlay, audio.Volume);
 
                 // Set the current playing audio to this one
                 currentAudio = audioName;
             }
             else
             {
-#if UNITY_EDITOR
                 Debug.LogWarning($"Audio not found: {audioName}");
-#endif
+            }
+        }
+
+        /// <summary>
+        /// Plays a one-shot audio clip by its name from the audioClips list.
+        /// </summary>
+        /// <param name="audioName">The name of the audio clip to play as one-shot.</param>
+        public void PlayOneShotAudio(string audioName)
+        {
+            // Find the audio clip by name
+            Audio audio = audioClips.Find(a => a.Name == audioName);
+            if (audio != null)
+            {
+                // Choose random clip if there are multiple clips
+                AudioClip clipToPlay = audio.Clips.Length > 1 ? audio.Clips[Random.Range(0, audio.Clips.Length)] : audio.Clips[0];
+
+                // Get an AudioPlayer from the pool and play the audio using PlayOneShot
+                AudioPlayer audioPlayer = audioPlayerPool.GetObject();
+                audioPlayer.PlayOneShot(clipToPlay, audio.Volume);
+
+                // Optionally, return to pool if the clip is not looping
+                if (!audio.Loop)
+                {
+                    StartCoroutine(ReturnAudioPlayerToPoolAfterPlaying(audioPlayer, audio));
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"Audio not found: {audioName}");
             }
         }
 
         /// <summary>
         /// Pauses all active AudioSources in the scene.
-        /// This is useful for pausing all audio during a pause menu or when switching scenes.
         /// </summary>
         public void PauseAllAudio()
         {
@@ -126,7 +152,6 @@ namespace SerapKeremGameTools._Game._AudioSystem
 
         /// <summary>
         /// Resumes all paused AudioSources in the scene.
-        /// This resumes the playback of any paused audio.
         /// </summary>
         public void ResumeAllAudio()
         {
@@ -157,6 +182,16 @@ namespace SerapKeremGameTools._Game._AudioSystem
         /// <param name="audioPlayer">The AudioPlayer to return to the pool.</param>
         public void ReturnAudioPlayerToPool(AudioPlayer audioPlayer)
         {
+            audioPlayerPool.ReturnObject(audioPlayer);
+        }
+
+        /// <summary>
+        /// Coroutine to return the AudioPlayer to the pool after the audio has finished playing.
+        /// </summary>
+        private IEnumerator ReturnAudioPlayerToPoolAfterPlaying(AudioPlayer audioPlayer, Audio audio)
+        {
+            // Wait for the audio clip to finish playing, then return the audio player to the pool
+            yield return new WaitForSeconds(audio.Clips[0].length); // Using the first clip in case of random choice
             audioPlayerPool.ReturnObject(audioPlayer);
         }
     }

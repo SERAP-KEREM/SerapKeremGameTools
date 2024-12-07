@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 namespace SerapKeremGameTools._Game._AudioSystem
 {
@@ -17,35 +16,14 @@ namespace SerapKeremGameTools._Game._AudioSystem
         }
 
         /// <summary>
-        /// Plays the given audio clip with the specified settings.
+        /// Plays the given audio clip using PlayOneShot.
         /// </summary>
-        /// <param name="audio">Audio settings to play</param>
-        public void PlayAudio(Audio audio)
+        /// <param name="clip">Audio clip to play</param>
+        /// <param name="volume">Volume of the audio</param>
+        public void PlayOneShot(AudioClip clip, float volume)
         {
-            if (!audioSource.isPlaying)  // Eğer ses zaten çalmıyorsa
-            {
-                audioSource.clip = audio.Clip;
-                audioSource.volume = audio.Volume;
-                audioSource.pitch = audio.Volume;
-                audioSource.loop = audio.Loop;
-                audioSource.Play();
-
-                // Eğer ses döngü yapmıyorsa, bitince havuza geri dönsün
-                if (!audio.Loop)
-                {
-                    StartCoroutine(ReturnToPoolAfterPlaying(audio));
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Waits until the audio clip finishes and returns the AudioPlayer to the pool.
-        /// </summary>
-        private IEnumerator ReturnToPoolAfterPlaying(Audio audio)
-        {
-            yield return new WaitForSeconds(audio.Clip.length);
-            AudioManager.Instance.ReturnAudioPlayerToPool(this);
+            audioSource.volume = volume;
+            audioSource.PlayOneShot(clip, volume);
         }
     }
 }
