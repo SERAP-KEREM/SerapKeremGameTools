@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
-public abstract class Interactable : MonoBehaviour
+namespace SerapKeremGameTools._Game._FPSPlayerSystem
+{
+    public abstract class Interactable : MonoBehaviour
 {
     private void Awake()
     {
@@ -10,4 +12,5 @@ public abstract class Interactable : MonoBehaviour
     public abstract void OnInteract();
     public abstract void OnFocus();
     public abstract void OnLoseFocus();
+}
 }

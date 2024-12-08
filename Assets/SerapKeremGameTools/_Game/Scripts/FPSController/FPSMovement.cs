@@ -1,58 +1,42 @@
 using SerapKeremGameTools._Game._AudioSystem;
-using System;
+using SerapKeremGameTools._Game._InputSystem;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public class FPSMovement : MonoBehaviour
+namespace SerapKeremGameTools._Game._FPSPlayerSystem
 {
+    public class FPSMovement : MonoBehaviour
+{
+    // Properties
     public bool CanMove { get; private set; } = true;
-    private bool IsSprinting => canSprint && Input.GetKey(sprintKey);
-    private bool IsShouldJump => Input.GetKey(jumpKey) && characterController.isGrounded;
-    private bool IsShouldCrouch => Input.GetKey(crouchKey) && !duringCrouchAnimation && characterController.isGrounded;
 
     [Header("Functional Options")]
-    [SerializeField] private bool canSprint = true;
-    [SerializeField] private bool canJump = true;
-    [SerializeField] private bool canCrouch = true;
     [SerializeField] private bool canUseHeadbob = true;
-    [SerializeField] private bool WillSlideOnSlopes = true;
-    [SerializeField] private bool canZoom = true;
-    [SerializeField] private bool canInteract = true;
     [SerializeField] private bool useFootSteps = true;
+    [SerializeField] private bool canZoom = true;
 
-    [Header("Controls")]
-    [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
-    [SerializeField] private KeyCode jumpKey = KeyCode.Space;
-    [SerializeField] private KeyCode crouchKey = KeyCode.LeftControl;
-    [SerializeField] private KeyCode interactKey = KeyCode.Mouse0;
-    [SerializeField] private KeyCode zoomKey = KeyCode.Mouse1;
 
     [Header("Movement Parameters")]
     [SerializeField] private float walkSpeed = 3.0f;
     [SerializeField] private float sprintSpeed = 6.0f;
     [SerializeField] private float crouchSpeed = 1.5f;
     [SerializeField] private float slopeSpeed = 8f;
-
-    [Header("Look Parameters")]
-    [SerializeField, Range(1, 10)] private float lookSpeedX = 2.0f;
-    [SerializeField, Range(1, 10)] private float lookSpeedY = 2.0f;
-    [SerializeField, Range(1, 180)] private float upperLookLimit = 80.0f;
-    [SerializeField, Range(1, 180)] private float lowerLookLimit = 80.0f;
-
+    [SerializeField] private bool canJump = true;
 
     [Header("Jumping Parameters")]
     [SerializeField] private float jumpForce = 8.0f;
-    [SerializeField] private float gravity = 30.0f;
+    [SerializeField] private float gravity = 15.0f;
+    [SerializeField] private bool WillSlideOnSlopes = true;
+
+    [Header("Zoom Parameters")]
+    [SerializeField] private float timeToZoom = 0.3f;
+    [SerializeField] private float zoomFOV = 30f;
+    private float defaultFOV;
+    private Coroutine zoomRoutine;
 
     [Header("Crouch Parameters")]
     [SerializeField] private float crouchHeight = 0.5f;
     [SerializeField] private float standingHeight = 2f;
     [SerializeField] private float timeToCrouch = 0.25f;
-    [SerializeField] private Vector3 crouchingCenter = new Vector3(0, 0.5f, 0);
-    [SerializeField] private Vector3 standingCenter = new Vector3(0, 0, 0);
-    private bool isCrouching;
-    private bool duringCrouchAnimation;
 
     [Header("Headbob Parameters")]
     [SerializeField] private float walkBobSpeed = 14f;
@@ -61,34 +45,56 @@ public class FPSMovement : MonoBehaviour
     [SerializeField] private float sprintBobAmount = 0.11f;
     [SerializeField] private float crouchBobSpeed = 8f;
     [SerializeField] private float crouchBobAmount = 0.025f;
-    private float defaultYPos = 0;
-    private float timer;
-
-    [Header("Zoom Parameters")]
-    [SerializeField] private float timeToZoom = 0.3f;
-    [SerializeField] private float zoomFOV = 30f;
-    private float defaultFOV;
-    private Coroutine zoomRoutine;
 
     [Header("Footstep Parameters")]
     [SerializeField] private float baseStepSpeed = 0.5f;
     [SerializeField] private float crouchStepMultipler = 1.5f;
     [SerializeField] private float sprintStepMultipler = 0.6f;
 
-
-
+    [Header("Audio Parameters")]
     [SerializeField] private string woodAudioName;
     [SerializeField] private string metalAudioName;
     [SerializeField] private string grassAudioName;
-
     [SerializeField] private string woodAudioNameSprint;
     [SerializeField] private string metalAudioNameSprint;
     [SerializeField] private string grassAudioNameSprint;
-
-
+    [SerializeField] private string woodAudioNameJump;
+    [SerializeField] private string metalAudioNameJump;
+    [SerializeField] private string grassAudioNameJump;
+    // Private variables
+    private Camera playerCamera;
+    private CharacterController characterController;
+    private Vector3 moveDirection;
+    private Vector2 currentInput;
     private float footstepTimer = 0;
-    private float GetCurrentOffset => isCrouching ? baseStepSpeed * crouchStepMultipler : IsSprinting ? baseStepSpeed * sprintStepMultipler : baseStepSpeed;
+    private float timer = 0;
 
+    private bool isCrouching = false;
+    private bool duringCrouchAnimation = false;
+    private float defaultYPos;
+
+    [SerializeField] private Vector3 crouchingCenter = new Vector3(0, 0.5f, 0);
+    [SerializeField] private Vector3 standingCenter = new Vector3(0, 0, 0);
+
+
+
+    //// Mouse Look Variables
+    [Header("Mouse Look Settings")]
+    [SerializeField] private float mouseLookSpeedX = 2.0f;  // Dikey dönü? h?z?
+    [SerializeField] private float mouseLookSpeedY = 2.0f;  // Yatay dönü? h?z?
+    private float currentRotationX = 0f;  // Yukar?-a?a?? dönü? aç?s?
+
+    // Initialization
+    void Awake()
+    {
+        playerCamera = GetComponentInChildren<Camera>();
+        characterController = GetComponent<CharacterController>();
+        defaultYPos = playerCamera.transform.localPosition.y;
+        defaultFOV = playerCamera.fieldOfView;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
     // SLIDING PARAMETERS
     private Vector3 hitPointNormal;
     private bool IsSliding
@@ -108,33 +114,7 @@ public class FPSMovement : MonoBehaviour
             }
         }
     }
-
-    [Header("Interaction")]
-    [SerializeField] private Vector3 interactionRayPoint = default;
-    [SerializeField] private float interactionDistance = default;
-    [SerializeField] private LayerMask interactionLayer = default;
-    private Interactable currentInteractable;
-
-    private Camera playerCamera;
-    private CharacterController characterController;
-
-    private Vector3 moveDirection;
-    private Vector2 currentInput;
-
-    private float rotationX = 0;
-
- 
-    void Awake()
-    {
-        playerCamera = GetComponentInChildren<Camera>();
-        characterController = GetComponent<CharacterController>();
-        defaultYPos = playerCamera.transform.localPosition.y;
-        defaultFOV = playerCamera.fieldOfView;
-  
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-    }
-
+    // Main Update Loop
     void Update()
     {
         if (CanMove)
@@ -142,189 +122,164 @@ public class FPSMovement : MonoBehaviour
             HandleMovementInput();
             HandleMouseLook();
 
+            if (PlayerFPSInput.IsShouldJump) HandleJump();
+            if (PlayerFPSInput.IsShouldCrouch) StartCoroutine(CrouchStand());
+            if (canUseHeadbob) HandleHeadbob();
+            if (useFootSteps) HandleFootSteps();
+            if (canZoom) HandleZoom();
+
             if (canJump)
                 HandleJump();
-
-            if (canCrouch)
-                HandleCrouch();
-
-            if (canUseHeadbob)
-                HandleHeadbob();
-
-            if (canZoom)
-                HandleZoom();
-
-            if (useFootSteps)
-            {
-
-                Debug.Log("q");
-                HandleFootSteps();
-
-            }
-
-            if (canInteract)
-            {
-                HandleInteractionCheck();
-                HandleInteractionInput();
-            }
-
-
-
             ApplyFinalMovements();
         }
     }
+
+    // Handle movement input and calculate direction
     private void HandleMovementInput()
     {
 
-        currentInput = new Vector2((IsSprinting ? sprintSpeed : isCrouching ? crouchSpeed : walkSpeed) * Input.GetAxis("Vertical"), (IsSprinting ? sprintSpeed : isCrouching ? crouchSpeed : walkSpeed) * Input.GetAxis("Horizontal"));
+        currentInput = new Vector2((PlayerFPSInput.IsSprinting ? sprintSpeed : isCrouching ? crouchSpeed : walkSpeed) * Input.GetAxis("Vertical"), (PlayerFPSInput.IsSprinting ? sprintSpeed : isCrouching ? crouchSpeed : walkSpeed) * Input.GetAxis("Horizontal"));
 
         float moveDirectionY = moveDirection.y;
         moveDirection = (transform.TransformDirection(Vector3.forward) * currentInput.x) + (transform.TransformDirection(Vector3.right) * currentInput.y);
         moveDirection.y = moveDirectionY;
     }
+
+    // Handle mouse look (camera rotation)
     private void HandleMouseLook()
     {
+        // Mouse hareketinden gelen dikey hareket (Y ekseni)
+        float rotationX = Input.GetAxis("Mouse Y") * mouseLookSpeedY;  // Dikey hassasiyet
+        currentRotationX -= rotationX;  // Yukar?/a?a?? bak???n birikmesini sa?la
+        currentRotationX = Mathf.Clamp(currentRotationX, -80f, 80f);  // Y ekseninde s?n?r
 
-        rotationX = Input.GetAxis("Mouse Y") * lookSpeedY;
-        rotationX = Mathf.Clamp(rotationX, -upperLookLimit, lowerLookLimit);
-        playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
-        transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeedX, 0);
+        // Kameran?n rotas?n? (yerel dönü?ünü) güncelleme
+        playerCamera.transform.localRotation = Quaternion.Euler(currentRotationX, 0, 0);
+
+        // Karakterin yatay rotas?n? (sa?a/sola dönme)
+        transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * mouseLookSpeedX, 0);
     }
 
+    // Handle jump behavior
     private void HandleJump()
     {
-        if (IsShouldJump)
+        if (PlayerFPSInput.IsShouldJump && characterController.isGrounded && !duringCrouchAnimation)
+        {
             moveDirection.y = jumpForce;
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 5))
+            {
+                string jumpAudio = GetFootstepAudioNameJump(hit.collider.tag);
+                if (!string.IsNullOrEmpty(jumpAudio))
+                {
+                    AudioManager.Instance.PlayOneShotAudio(jumpAudio); // Jump sesini çal
+                }
+            }
+        }
     }
 
+    // Handle crouch behavior
     private void HandleCrouch()
     {
-        if (IsShouldCrouch)
+        if (PlayerFPSInput.IsShouldCrouch)
             StartCoroutine(CrouchStand());
     }
 
-    private void HandleHeadbob()
-    {
-        if (!characterController.isGrounded)
-            return;
-        if (Mathf.Abs(moveDirection.x) > 0.1f || Mathf.Abs(moveDirection.z) > 0.1f)
-        {
-
-            timer += Time.deltaTime * (isCrouching ? crouchBobSpeed : IsSprinting ? sprintBobSpeed : walkBobSpeed);
-            playerCamera.transform.localPosition = new Vector3(playerCamera.transform.localPosition.x,
-            defaultYPos + Mathf.Sin(timer) * (isCrouching ? crouchBobAmount : IsSprinting ? sprintBobAmount : walkBobAmount),
-            playerCamera.transform.localPosition.z);
-        }
-    }
-   
-
+    // Handle zoom (FOV change)
     private void HandleZoom()
     {
-        if (Input.GetKeyDown(zoomKey))
+        if (Input.GetKeyDown(PlayerFPSInput.zoomKey))
         {
             if (zoomRoutine != null)
             {
                 StopCoroutine(zoomRoutine);
-                zoomRoutine = null;
             }
             zoomRoutine = StartCoroutine(ToggleZoom(true));
         }
-        if (Input.GetKeyUp(zoomKey))
+        if (Input.GetKeyUp(PlayerFPSInput.zoomKey))
         {
             if (zoomRoutine != null)
             {
                 StopCoroutine(zoomRoutine);
-                zoomRoutine = null;
             }
             zoomRoutine = StartCoroutine(ToggleZoom(false));
         }
     }
 
-    private void HandleInteractionCheck()
-    {
-        if (Physics.Raycast(playerCamera.ViewportPointToRay(interactionRayPoint), out RaycastHit hit, interactionDistance))
-        {
-            if (hit.collider.gameObject.layer == 9 && (currentInteractable == null || hit.collider.gameObject.GetInstanceID() != currentInteractable.GetInstanceID()))
-            {
-                hit.collider.TryGetComponent(out currentInteractable);
-                if (currentInteractable)
-                    currentInteractable.OnFocus();
-            }
-        }
+   
 
-
-        else if (currentInteractable)
-        {
-            currentInteractable.OnLoseFocus();
-            currentInteractable = null;
-        }
-    }
-    private void HandleInteractionInput()
-    {
-
-        if (Input.GetKeyDown(interactKey) && currentInteractable != null && Physics.Raycast(playerCamera.ViewportPointToRay(interactionRayPoint), out RaycastHit hit, interactionDistance))
-        {
-            currentInteractable.OnInteract();
-        }
-
-    }
-    private void HandleFootSteps()
+    // Handle headbob for walking, sprinting, crouching
+    private void HandleHeadbob()
     {
         if (!characterController.isGrounded) return;
-        if (currentInput == Vector2.zero) return;
+
+        if (Mathf.Abs(currentInput.x) > 0.1f || Mathf.Abs(currentInput.y) > 0.1f)
+        {
+            timer += Time.deltaTime * (isCrouching ? crouchBobSpeed : PlayerFPSInput.IsSprinting ? sprintBobSpeed : walkBobSpeed);
+            playerCamera.transform.localPosition = new Vector3(playerCamera.transform.localPosition.x,
+                defaultYPos + Mathf.Sin(timer) * (isCrouching ? crouchBobAmount : PlayerFPSInput.IsSprinting ? sprintBobAmount : walkBobAmount),
+                playerCamera.transform.localPosition.z);
+        }
+    }
+
+    // Handle footstep sounds based on surface type
+    private void HandleFootSteps()
+    {
+        if (!characterController.isGrounded || currentInput == Vector2.zero) return;
 
         footstepTimer -= Time.deltaTime;
 
-        // E?er ko?ma durumu aktifse, sprint sesleri çal
         if (footstepTimer <= 0)
         {
-            if (Physics.Raycast(gameObject.transform.position, Vector3.down, out RaycastHit hit, 5))
+            if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 5))
             {
-                // Sprint ve normal ad?mlar için seslerin ayr?lmas?
-                if (IsSprinting)
+                string footstepAudio = PlayerFPSInput.IsSprinting ? GetFootstepAudioNameSprint(hit.collider.tag) : GetFootstepAudioName(hit.collider.tag);
+                if (!string.IsNullOrEmpty(footstepAudio))
                 {
-                    // Sprint ko?arken h?zl? ko?ma seslerini çal
-                    switch (hit.collider.tag)
-                    {
-                        case "FootSteps/WOOD":
-                            AudioManager.Instance.PlayOneShotAudio(woodAudioNameSprint); 
-                            break;
-                        case "FootSteps/METAL":
-                            AudioManager.Instance.PlayOneShotAudio(metalAudioNameSprint); 
-                            break;
-                        case "FootSteps/GRASS":
-                            AudioManager.Instance.PlayOneShotAudio(grassAudioNameSprint); 
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                else
-                {
-                    // Normal ko?arken, yani sprint de?ilken normal ad?m seslerini çal
-                    switch (hit.collider.tag)
-                    {
-                        case "FootSteps/WOOD":
-                            AudioManager.Instance.PlayOneShotAudio(woodAudioName);
-                            break;
-                        case "FootSteps/METAL":
-                            AudioManager.Instance.PlayOneShotAudio(metalAudioName);
-                            break;
-                        case "FootSteps/GRASS":
-                            AudioManager.Instance.PlayOneShotAudio(grassAudioName);
-                            break;
-                        default:
-                            break;
-                    }
+                    AudioManager.Instance.PlayOneShotAudio(footstepAudio);
                 }
             }
 
-            // Ko?ma h?z? ayar?
-            footstepTimer = GetCurrentOffset;
+            footstepTimer = GetCurrentOffset();
         }
     }
 
+    private string GetFootstepAudioName(string surfaceTag)
+    {
+        switch (surfaceTag)
+        {
+            case "FootSteps/WOOD": return woodAudioName;
+            case "FootSteps/METAL": return metalAudioName;
+            case "FootSteps/GRASS": return grassAudioName;
+            default: return null;
+        }
+    }
 
+    private string GetFootstepAudioNameSprint(string surfaceTag)
+    {
+        switch (surfaceTag)
+        {
+            case "FootSteps/WOOD": return woodAudioNameSprint;
+            case "FootSteps/METAL": return metalAudioNameSprint;
+            case "FootSteps/GRASS": return grassAudioNameSprint;
+            default: return null;
+        }
+    }
+    private string GetFootstepAudioNameJump(string surfaceTag)
+    {
+        switch (surfaceTag)
+        {
+            case "FootSteps/WOOD": return woodAudioNameJump;
+            case "FootSteps/METAL": return metalAudioNameJump;
+            case "FootSteps/GRASS": return grassAudioNameJump;
+            default: return null;
+        }
+    }
+    private float GetCurrentOffset()
+    {
+        return isCrouching ? baseStepSpeed * crouchStepMultipler : PlayerFPSInput.IsSprinting ? baseStepSpeed * sprintStepMultipler : baseStepSpeed;
+    }
+
+    // Apply final movement (gravity and slopes)
     private void ApplyFinalMovements()
     {
         if (!characterController.isGrounded)
@@ -334,6 +289,8 @@ public class FPSMovement : MonoBehaviour
             moveDirection += new Vector3(hitPointNormal.x, -hitPointNormal.y, hitPointNormal.z) * slopeSpeed;
         characterController.Move(moveDirection * Time.deltaTime);
     }
+
+    // Crouch stand coroutine (animation)
     private IEnumerator CrouchStand()
     {
         if (isCrouching && Physics.Raycast(playerCamera.transform.position, Vector3.up, 1f))
@@ -380,4 +337,5 @@ public class FPSMovement : MonoBehaviour
             zoomRoutine = null;
         }
     }
-}
+    }
+    }

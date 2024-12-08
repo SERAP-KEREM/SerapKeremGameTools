@@ -388,6 +388,127 @@ Transform:
   - {fileID: 2065226352}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &280218984
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 280218989}
+  - component: {fileID: 280218988}
+  - component: {fileID: 280218987}
+  - component: {fileID: 280218986}
+  - component: {fileID: 280218985}
+  m_Layer: 7
+  m_Name: Cube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &280218985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280218984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43e969b805c453341aa18f5feef24567, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  messageOnFocus: Odaklan?ld?!
+  messageOnInteract: Etkile?im Ba?lat?ld?!
+  focusColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+--- !u!65 &280218986
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280218984}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &280218987
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280218984}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &280218988
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280218984}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &280218989
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 280218984}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 19.39, y: 0.513, z: 21.7}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &315348141
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,6 +1011,8 @@ GameObject:
   - component: {fileID: 726997284}
   - component: {fileID: 726997283}
   - component: {fileID: 726997287}
+  - component: {fileID: 726997288}
+  - component: {fileID: 726997289}
   m_Layer: 0
   m_Name: FirstPersonController
   m_TagString: Player
@@ -1006,7 +1129,7 @@ Transform:
   m_GameObject: {fileID: 726997282}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1025,56 +1148,77 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 231ea5fff4cf9964fb704f2f159336b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canSprint: 1
-  canJump: 1
-  canCrouch: 1
   canUseHeadbob: 1
-  WillSlideOnSlopes: 1
-  canZoom: 1
-  canInteract: 1
   useFootSteps: 1
-  sprintKey: 304
-  jumpKey: 32
-  crouchKey: 306
-  interactKey: 323
-  zoomKey: 324
-  walkSpeed: 3
-  sprintSpeed: 6
+  canZoom: 1
+  walkSpeed: 2
+  sprintSpeed: 4
   crouchSpeed: 1.5
   slopeSpeed: 8
-  lookSpeedX: 2
-  lookSpeedY: 2
-  upperLookLimit: 80
-  lowerLookLimit: 80
+  canJump: 1
   jumpForce: 8
-  gravity: 30
+  gravity: 15
+  WillSlideOnSlopes: 1
+  timeToZoom: 0.3
+  zoomFOV: 30
   crouchHeight: 0.5
   standingHeight: 2
   timeToCrouch: 0.25
-  crouchingCenter: {x: 0, y: 0.5, z: 0}
-  standingCenter: {x: 0, y: 0, z: 0}
   walkBobSpeed: 14
   walkBobAmount: 0.05
   sprintBobSpeed: 18
   sprintBobAmount: 0.11
   crouchBobSpeed: 8
   crouchBobAmount: 0.025
-  timeToZoom: 0.3
-  zoomFOV: 30
   baseStepSpeed: 0.5
   crouchStepMultipler: 1.5
   sprintStepMultipler: 0.6
-  woodAudioName: woodAudioName
-  metalAudioName: metalAudioName
-  grassAudioName: grassAudioName
-  woodAudioNameSprint: woodAudioNameSprint
-  metalAudioNameSprint: metalAudioNameSprint
-  grassAudioNameSprint: grassAudioNameSprint
-  interactionRayPoint: {x: 0, y: 0, z: 0}
-  interactionDistance: 0
+  woodAudioName: 
+  metalAudioName: 
+  grassAudioName: 
+  woodAudioNameSprint: 
+  metalAudioNameSprint: 
+  grassAudioNameSprint: 
+  woodAudioNameJump: 
+  metalAudioNameJump: 
+  grassAudioNameJump: 
+  crouchingCenter: {x: 0, y: 0.5, z: 0}
+  standingCenter: {x: 0, y: 0, z: 0}
+  mouseLookSpeedX: 2
+  mouseLookSpeedY: 2
+--- !u!114 &726997288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726997282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 711fae1843d61754aa43400c4175e69d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sprintKey: 304
+  jumpKey: 32
+  crouchKey: 306
+  mouseSensitivityX: 2
+  mouseSensitivityY: 2
+--- !u!114 &726997289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 726997282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b08d21b28ff03b4796760c23fd5d033, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactionDistance: 3
   interactionLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
 --- !u!1 &783673692
 GameObject:
   m_ObjectHideFlags: 0
@@ -1757,6 +1901,30 @@ MonoBehaviour:
     volume: 0.2
     pitch: 1
     loop: 0
+  - name: woodAudioNameJump
+    clips:
+    - {fileID: 8300000, guid: bb5ec83ccc5c69f43b31f100278bff91, type: 3}
+    - {fileID: 8300000, guid: 623ad07c146cedd4db6b902fd1612618, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+  - name: metalAudioNameJump
+    clips:
+    - {fileID: 8300000, guid: a04e8112fb4cca944baabc0048ff839d, type: 3}
+    - {fileID: 8300000, guid: d4ce8205a3ae9ab4181dbc190b1a837e, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+  - name: grassAudioNameJump
+    clips:
+    - {fileID: 8300000, guid: 6aeefb601c305f64487cebdfacae5b6c, type: 3}
+    - {fileID: 8300000, guid: a967f92e38352bb4291945423de63499, type: 3}
+    - {fileID: 8300000, guid: 856b6d74addb9ad4ab2b7b47bae3e839, type: 3}
+    - {fileID: 8300000, guid: 984d316ed8be3ac4da9e31768a8b1fa9, type: 3}
+    - {fileID: 8300000, guid: b04465ceef591864badb1aa5c65ee644, type: 3}
+    volume: 0.2
+    pitch: 1
+    loop: 0
   audioPlayerPrefab: {fileID: 8573648614527833978, guid: 8532bc338f01d3f458a800d41a0c130d, type: 3}
   poolSize: 50
 --- !u!4 &1323518478
@@ -2419,3 +2587,4 @@ SceneRoots:
   - {fileID: 348373229}
   - {fileID: 1323518478}
   - {fileID: 151091110}
+  - {fileID: 280218989}
