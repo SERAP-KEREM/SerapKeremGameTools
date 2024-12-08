@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
-
-public class FPSController : MonoBehaviour
+namespace SerapKeremGameTools._Game._FPSPlayerSystem
+{
+    public class FPSController : MonoBehaviour
 {
     public bool CanMove { get; private set; } = true;
     private bool IsSprinting => canSprint && Input.GetKey(sprintKey);
@@ -467,4 +468,5 @@ public class FPSController : MonoBehaviour
         regeneratingStamina = null; 
     }
 
+}
 }

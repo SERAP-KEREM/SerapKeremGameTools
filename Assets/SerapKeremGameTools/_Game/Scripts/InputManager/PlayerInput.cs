@@ -5,7 +5,7 @@ using UnityEngine.Events;
 namespace SerapKeremGameTools._Game._InputSystem
 {
     /// <summary>
-    /// Handles player input, including mouse position tracking and mouse events.
+    /// Handles player input, including mouse position tracking, mouse events, and basic movement input.
     /// </summary>
     public class PlayerInput : MonoSingleton<PlayerInput>
     {
@@ -62,12 +62,27 @@ namespace SerapKeremGameTools._Game._InputSystem
 #endif
             }
         }
+
         /// <summary>
         /// Updates input states, including mouse position and movement input.
         /// </summary>
-        private void Update()
+        protected virtual void Update()
         {
-            // Update mouse position
+            // Update mouse position in world coordinates
+            UpdateMousePosition();
+
+            // Update movement input (WASD or arrow keys)
+            UpdateMovementInput();
+
+            // Handle mouse button events
+            HandleMouseInput();
+        }
+
+        /// <summary>
+        /// Update mouse position and trigger events if the position changes.
+        /// </summary>
+        private void UpdateMousePosition()
+        {
             if (mainCamera != null)
             {
                 Vector3 previousMousePosition = MousePosition; // Store previous position
@@ -79,11 +94,21 @@ namespace SerapKeremGameTools._Game._InputSystem
                     OnMousePositionInput.Invoke(MousePosition);
                 }
             }
+        }
 
-            // Update movement input
+        /// <summary>
+        /// Update movement input from the horizontal and vertical axes.
+        /// </summary>
+        private void UpdateMovementInput()
+        {
             MovementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        }
 
-            // Mouse input events
+        /// <summary>
+        /// Handles mouse button press, hold, and release events.
+        /// </summary>
+        private void HandleMouseInput()
+        {
             if (Input.GetMouseButtonDown(0)) // Left mouse button pressed
             {
                 OnMouseDownEvent.Invoke();
@@ -105,8 +130,8 @@ namespace SerapKeremGameTools._Game._InputSystem
         /// </summary>
         public Vector2 GetMovementInput()
         {
-            float moveX = Input.GetAxisRaw("Horizontal");  
-            float moveY = Input.GetAxisRaw("Vertical");   
+            float moveX = Input.GetAxisRaw("Horizontal");
+            float moveY = Input.GetAxisRaw("Vertical");
             return new Vector2(moveX, moveY);
         }
     }
