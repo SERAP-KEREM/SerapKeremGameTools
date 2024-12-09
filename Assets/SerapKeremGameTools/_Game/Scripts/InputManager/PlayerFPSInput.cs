@@ -3,9 +3,12 @@ using UnityEngine;
 
 namespace SerapKeremGameTools._Game._InputSystem
 {
+    /// <summary>
+    /// Handles all player input for FPS controls, including movement, sprinting, jumping, crouching, zooming, and interacting.
+    /// </summary>
     public class PlayerFPSInput : MonoBehaviour
     {
-        // Statik özellikler, di?er s?n?flar?n bu verilere eri?ebilmesi için
+        // Static properties for accessing input states globally.
         public static Vector2 MovementInput { get; private set; }
         public static bool IsSprinting { get; private set; }
         public static bool IsShouldJump { get; private set; }
@@ -16,17 +19,15 @@ namespace SerapKeremGameTools._Game._InputSystem
         public static float MouseLookInputY { get; private set; }
 
         [Header("Controls")]
-        [SerializeField] private KeyCode sprintKey = KeyCode.LeftShift;
-        [SerializeField] private KeyCode jumpKey = KeyCode.Space;
-        [SerializeField] private KeyCode crouchKey = KeyCode.LeftControl;
-        [SerializeField] public static KeyCode zoomKey = KeyCode.Mouse1;
-        [SerializeField] public static KeyCode interactKey = KeyCode.E;
-
-      
+        [SerializeField] private KeyCode _sprintKey = KeyCode.LeftShift;
+        [SerializeField] private KeyCode _jumpKey = KeyCode.Space;
+        [SerializeField] private KeyCode _crouchKey = KeyCode.LeftControl;
+        [SerializeField] public static KeyCode ZoomKey = KeyCode.Mouse1;
+        [SerializeField] public static KeyCode InteractKey = KeyCode.E;
 
         [Header("Movement")]
-        [SerializeField] private float mouseSensitivityX = 2.0f;
-        [SerializeField] private float mouseSensitivityY = 2.0f;
+        [SerializeField] private float _mouseSensitivityX = 2.0f;
+        [SerializeField] private float _mouseSensitivityY = 2.0f;
 
         private void Update()
         {
@@ -34,29 +35,39 @@ namespace SerapKeremGameTools._Game._InputSystem
             HandleActions();
             HandleMouseLook();
 
-            if (Input.GetKey(interactKey))
+            // Interaction input handled here.
+            if (Input.GetKey(InteractKey))
             {
                 FPSInteractionSystem.Instance.TryInteract();
             }
         }
 
+        /// <summary>
+        /// Captures movement input (WASD or arrow keys).
+        /// </summary>
         private void HandleMovementInput()
         {
             MovementInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         }
 
+        /// <summary>
+        /// Handles action inputs such as sprinting, jumping, crouching, and zooming.
+        /// </summary>
         private void HandleActions()
         {
-            IsSprinting = Input.GetKey(sprintKey);
-            IsShouldJump = Input.GetKeyDown(jumpKey);
-            IsShouldCrouch = Input.GetKeyDown(crouchKey);
-            IsZooming = Input.GetKey(zoomKey);
+            IsSprinting = Input.GetKey(_sprintKey);
+            IsShouldJump = Input.GetKeyDown(_jumpKey);
+            IsShouldCrouch = Input.GetKeyDown(_crouchKey);
+            IsZooming = Input.GetKey(ZoomKey);
         }
 
+        /// <summary>
+        /// Captures mouse input for camera rotation.
+        /// </summary>
         private void HandleMouseLook()
         {
-            MouseLookInputX = Input.GetAxis("Mouse X") * mouseSensitivityX;
-            MouseLookInputY = Input.GetAxis("Mouse Y") * mouseSensitivityY;
+            MouseLookInputX = Input.GetAxis("Mouse X") * _mouseSensitivityX;
+            MouseLookInputY = Input.GetAxis("Mouse Y") * _mouseSensitivityY;
         }
     }
 }
