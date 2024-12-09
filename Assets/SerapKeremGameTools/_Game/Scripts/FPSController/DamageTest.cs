@@ -8,6 +8,6 @@ public class DamageTest : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
-            FPSController.OnTakeDamage(15);
+            FPSDamage.OnTakeDamage(15);
     }
 }

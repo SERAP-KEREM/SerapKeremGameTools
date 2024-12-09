@@ -9,16 +9,16 @@ public class UI : MonoBehaviour
 
     private void OnEnable()
     {
-        FPSController.OnDamage += UpdateHealth;
-        FPSController.OnHeal += UpdateHealth;
-        FPSController.OnStaminaChange += UpdateStamina;
+        FPSDamage.OnDamage += UpdateHealth;
+        FPSDamage.OnHeal += UpdateHealth;
+        FPSMovement.OnStaminaChange += UpdateStamina;
     }
 
     private void OnDisable()
     {
-        FPSController.OnDamage -= UpdateHealth;
-        FPSController.OnHeal -= UpdateHealth;
-        FPSController.OnStaminaChange -= UpdateStamina;
+        FPSDamage.OnDamage -= UpdateHealth;
+        FPSDamage.OnHeal -= UpdateHealth;
+        FPSMovement.OnStaminaChange -= UpdateStamina;
 
     }
 
