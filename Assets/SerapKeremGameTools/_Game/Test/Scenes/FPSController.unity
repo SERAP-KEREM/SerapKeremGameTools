@@ -1091,7 +1091,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 726997285}
-  - component: {fileID: 726997284}
   - component: {fileID: 726997283}
   - component: {fileID: 726997287}
   - component: {fileID: 726997288}
@@ -1130,80 +1129,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &726997284
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 726997282}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b36a044d8e51f14e910a9edd71ff4a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canSprint: 1
-  canJump: 1
-  canCrouch: 1
-  canUseHeadbob: 1
-  WillSlideOnSlopes: 1
-  canZoom: 1
-  canInteract: 1
-  useFootSteps: 1
-  useStamina: 1
-  sprintKey: 304
-  jumpKey: 32
-  crouchKey: 306
-  interactKey: 323
-  zoomKey: 324
-  walkSpeed: 3
-  sprintSpeed: 6
-  crouchSpeed: 1.5
-  slopeSpeed: 8
-  lookSpeedX: 2
-  lookSpeedY: 2
-  upperLookLimit: 80
-  lowerLookLimit: 80
-  maxHealth: 100
-  timeBeforeRegenStarts: 3
-  healthValueIncrement: 1
-  healthTimeIncrement: 0.1
-  maxStamina: 100
-  staminaUseMultiplier: 30
-  timeBeforeStaminaRegenStarts: 5
-  staminaValueIncrement: 2
-  staminaTimeIncrement: 0.1
-  jumpForce: 8
-  gravity: 30
-  crouchHeight: 0.5
-  standingHeight: 2
-  timeToCrouch: 0.25
-  crouchingCenter: {x: 0, y: 0.5, z: 0}
-  standingCenter: {x: 0, y: 0, z: 0}
-  walkBobSpeed: 14
-  walkBobAmount: 0.05
-  sprintBobSpeed: 18
-  sprintBobAmount: 0.11
-  crouchBobSpeed: 8
-  crouchBobAmount: 0.025
-  timeToZoom: 0.3
-  zoomFOV: 30
-  baseStepSpeed: 0.5
-  crouchStepMultipler: 1.5
-  sprintStepMultipler: 0.6
-  footstepAudioSource: {fileID: 0}
-  woodClips:
-  - {fileID: 8300000, guid: 361d4373555c27741a0035e9fed38bf8, type: 3}
-  metalClips:
-  - {fileID: 8300000, guid: 361d4373555c27741a0035e9fed38bf8, type: 3}
-  - {fileID: 8300000, guid: 361d4373555c27741a0035e9fed38bf8, type: 3}
-  grassClips:
-  - {fileID: 8300000, guid: 361d4373555c27741a0035e9fed38bf8, type: 3}
-  interactionRayPoint: {x: 0, y: 0, z: 0}
-  interactionDistance: 0
-  interactionLayer:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!4 &726997285
 Transform:
   m_ObjectHideFlags: 0
