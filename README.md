@@ -109,6 +109,21 @@ The **SaveManager** and **LoadManager** classes make saving and loading game dat
 [💾 SaveManager](https://github.com/SERAP-KEREM/SerapKeremGameTools/blob/main/Assets/SerapKeremGameTools/_Game/Scripts/Save%26Load/SaveManager.cs)  
 [💾 LoadManager](https://github.com/SERAP-KEREM/SerapKeremGameTools/blob/main/Assets/SerapKeremGameTools/_Game/Scripts/Save%26Load/LoadManager.cs)
 
+
+---
+
+
+### **FPSCharacterSystem.cs**
+The **FPSCharacterSystem** is responsible for the movement, interaction, and damage handling of the player character in first-person shooter (FPS) games.
+
+- **FPSMovement** handles player movement, including walking, sprinting, crouching, jumping, and more. It also features head bobbing, footstep sounds, stamina management, and zooming.
+- **FPSInteractionSystem** allows the player to interact with objects in the game world, including focusing on and executing interactions with nearby objects.
+- **FPSDamageSystem** manages the player's health, damage intake, and death handling. It tracks health, applies damage with a cooldown to prevent rapid damage intake, and triggers death-related events when the player’s health reaches zero.
+
+[🏃‍♂️ FPSMovement](https://github.com/SERAP-KEREM/SerapKeremGameTools/blob/main/Assets/SerapKeremGameTools/_Game/Scripts/FPSController/FPSMovement.cs)  
+[🖱️ FPSInteractionSystem](https://github.com/SERAP-KEREM/SerapKeremGameTools/blob/main/Assets/SerapKeremGameTools/_Game/Scripts/FPSController/FPSInteractionSystem.cs)  
+[💥 FPSDamageSystem](https://github.com/SERAP-KEREM/SerapKeremGameTools/blob/main/Assets/SerapKeremGameTools/_Game/Scripts/FPSController/FPSDamage.cs)
+
 ---
 
 
